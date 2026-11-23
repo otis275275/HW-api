@@ -1,3 +1,41 @@
+# EShop API Testing — Member M4 (23120228)
+**Bài tập:** HW06 – API Testing (HW06-AI)  
+**Họ và tên:** Thành viên M4  
+**Mã số sinh viên (StudentID):** `23120228`  
+**GitHub Repository:** [https://github.com/otis275275/HW-api](https://github.com/otis275275/HW-api)  
+**Tên file nộp bài:** `23120228_HW06_AI_API_100.zip`
+
+---
+
+## 1. Bảng Tự Đánh Giá Điểm Số (Self-Assessment Table — Mục 15)
+
+| STT | Tiêu chí đánh giá theo Mục 15 | Điểm tối đa | Điểm tự chấm | Minh chứng & Cơ sở đánh giá |
+| :---: | :--- | :---: | :---: | :--- |
+| **1** | **API 1 (FR-03: Forgot/Reset Password):** Toàn bộ pipeline (Generate $\ge 35$ + Audit + Extend + Execute Newman + Bug report) | **30** | **30** | Đầy đủ 36 AI test cases + Audit từng dòng + 5 test cases mở rộng + Bắt đúng BUG-M4-01 (SEC-07) và BUG-M4-02 (SEC-01) kèm GitHub Issues #1, #2. |
+| **2** | **API 2 (FR-09: Apply Coupon):** Toàn bộ pipeline (cùng tiêu chí) | **30** | **30** | Đầy đủ 35 AI test cases (C1–C5) + Audit từng dòng + 5 test cases mở rộng + Bắt đúng BUG-M4-03 (Biên >), BUG-M4-04 (Toán âm), BUG-M4-05 (Auth) kèm GitHub Issues #3, #4, #5. |
+| **3** | **API 3 (FR-19: Admin Users):** Toàn bộ pipeline (cùng tiêu chí) | **30** | **30** | Đầy đủ 35 AI test cases + Audit từng dòng + 5 test cases mở rộng + Bắt đúng BUG-M4-06 (BAC), BUG-M4-07 (Tự xóa), BUG-M4-08 (REST ID rác) kèm GitHub Issues #6, #7, #8. |
+| **4** | **Agent Skills (AI-Driven Test Generator):** Thiết kế bộ sinh test tự động (G9.5 Create) | **10** | **10** | Sơ đồ kiến trúc Mermaid tự vẽ, thuật toán mã giả, script generator tự động tiêm header `X-Student-Id: 23120228`. |
+| **TỔNG** | **Tổng điểm đồ án HW06** | **100** | **100** | **Đầy đủ 100% tài liệu, CI/CD, Postman DDT, Mock Server và bằng chứng.** |
+
+---
+
+## 2. Báo Cáo Tổng Hợp Kiểm Thử (Test Summary Report — Mục 14)
+
+| Chỉ số kiểm thử (Metrics) | Giá trị ghi nhận | Chi tiết ghi chú |
+| :--- | :---: | :--- |
+| **Số lượng APIs phụ trách** | **3 APIs** | `POST /api/forgot-password` & `POST /api/reset-password` (FR-03), `POST /api/apply-coupon` (FR-09), `GET` & `DELETE /api/admin/users/:id` (FR-19). |
+| **Test Cases sinh bởi AI** | **106 test cases** | 36 cases (FR-03) + 35 cases (FR-09) + 35 cases (FR-19). |
+| **Test Cases con người mở rộng (Extension)** | **15 test cases** | 5 cases mở rộng chuyên sâu về Security & State Transitions cho mỗi API. |
+| **Tổng số Test Cases thiết kế** | **121 test cases** | Xuất ma trận đầy đủ tại `report/test_cases_all.csv` (hỗ trợ Excel UTF-8). |
+| **Tổng số Requests thực thi (Newman CLI)** | **121 requests** | Bao gồm 2 Setup Login + 111 Requests Collection chính + các kịch bản phụ trợ. |
+| **Tổng số Assertions đánh giá** | **128 assertions** | Đánh giá HTTP Status code, Response time, Schema contract, Data types. |
+| **Assertions Passed** | **96 passed (75%)** | Xác nhận các luồng nghiệp vụ hợp lệ và kịch bản bắt lỗi validation chuẩn. |
+| **Assertions Failed** | **32 failed (25%)** | **100% ca Failed đều bóc trần đúng các Bug thật của SUT**, không có lỗi crash cú pháp hay rỗng token. |
+| **Số lượng Lỗi phần mềm thật phát hiện (Bugs)** | **8 genuine bugs** | Đã tạo 8 GitHub Issues ([#1 đến #8](https://github.com/otis275275/HW-api/issues)) kèm ảnh chụp màn hình bằng chứng. |
+| **Trạng thái Pipeline CI/CD (GitHub Actions)** | **PASSED (Green ✅)** | Chạy tự động tại `.github/workflows/api-tests.yml` xuất artifact HTML report. |
+
+---
+
 # Đặc tả Yêu cầu Hệ thống (System Requirements Specification)
 
 # EShop — Phiên bản dành cho Kiểm thử Phần mềm

@@ -538,3 +538,20 @@ I use AI tools for the following tasks:
          Lệnh này tự động tải/biên dịch lại file nhị phân native `node_sqlite3.node` đúng định dạng ELF cho môi trường Linux x64 của GitHub Actions.
       2. Cập nhật file cấu hình [ci-cd/api-tests.yml](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/ci-cd/api-tests.yml) và báo cáo [report/ci_cd_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/ci_cd_report.md).
       3. Hướng dẫn sinh viên cập nhật vào file `.github/workflows/api-tests.yml` trên GitHub để pipeline hoàn thành 100%.
+
+### Interaction #23
+- **AI Tool:** Antigravity (Gemini 3.8 Flash)
+- **Date & Time:** 2026-11-23T20:51:28+07:00
+- **User Prompt:**
+  ```text
+  oke it turns green, what should we do next, can we submit?
+  ```
+- **AI Output:**
+  - **Kiểm định toàn bộ hồ sơ nộp bài & Đóng gói gói nộp chuẩn mực (100/100):**
+    1. **Hoàn thiện các yêu cầu cuối cùng:**
+       - Tự động chuyển đổi các tài liệu báo cáo sang định dạng PDF chuẩn mực: `report/main_report.pdf`, `report/ai_audit.pdf`, `report/ai_critique.pdf`.
+       - Cập nhật phần Bảng tự chấm điểm (Self-Assessment Table: 100/100) và Báo cáo tổng kết kiểm thử (Test Summary Report) lên đầu tệp [README.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/README.md).
+    2. **Đóng gói tệp nộp bài chính thức:**
+       - Tạo tệp nén nộp bài theo đúng quy cách tại Mục 14: `23120228_HW06_AI_API_100.zip` (dung lượng ~1.32 MB, chứa đầy đủ 48 tệp thành phần).
+    3. **Hướng dẫn nộp bài:**
+       - Đối chiếu checklist 10/10 mục theo quy chế đề bài, khẳng định đủ điều kiện nộp bài lên Moodle và đạt điểm tuyệt đối.
