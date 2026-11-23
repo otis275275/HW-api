@@ -498,3 +498,43 @@ I use AI tools for the following tasks:
       2. Cập nhật bước cài đặt phụ thuộc chuyển vào đúng thư mục: `cd backend && npm install`.
       3. Cập nhật nội dung file chuẩn hóa tại `ci-cd/api-tests.yml` và đồng bộ vào `report/ci_cd_report.md`.
       4. Hướng dẫn sinh viên copy nội dung đã sửa dán đè vào `.github/workflows/api-tests.yml` trên GitHub để pipeline chạy thành công ngay lập tức.
+
+### Interaction #22
+- **AI Tool:** Antigravity (Gemini 3.8 Flash)
+- **Date & Time:** 2026-11-23T20:42:47+07:00
+- **User Prompt:**
+  ```text
+  Run node backend/database.js
+  /home/runner/work/HW-api/HW-api/backend/node_modules/bindings/bindings.js:121
+          throw e;
+          ^
+
+  Error: /home/runner/work/HW-api/HW-api/backend/node_modules/sqlite3/build/Release/node_sqlite3.node: invalid ELF header
+      at Module._extensions..node (node:internal/modules/cjs/loader:1661:18)
+      at Module.load (node:internal/modules/cjs/loader:1266:32)
+      at Module._load (node:internal/modules/cjs/loader:1091:12)
+      at Module.require (node:internal/modules/cjs/loader:1289:19)
+      at require (node:internal/modules/helpers:182:18)
+      at bindings (/home/runner/work/HW-api/HW-api/backend/node_modules/bindings/bindings.js:112:48)
+      at Object.<anonymous> (/home/runner/work/HW-api/HW-api/backend/node_modules/sqlite3/lib/sqlite3-binding.js:1:37)
+      at Module._compile (node:internal/modules/cjs/loader:1521:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+      at Module.load (node:internal/modules/cjs/loader:1266:32) {
+    code: 'ERR_DLOPEN_FAILED'
+  }
+
+  Node.js v20.20.2
+  Error: Process completed with exit code 1.
+  ```
+- **AI Output:**
+  - **Khắc phục lỗi xung đột nhị phân (Binary Platform Conflict) của thư viện native `sqlite3`:**
+    - *Nguyên nhân:* Thư mục `backend/node_modules/` đã bị commit lên Git từ môi trường Windows (chứa file nhị phân `node_sqlite3.node` định dạng PE cho Windows). Khi chạy trên máy ảo CI/CD Ubuntu Linux (`ubuntu-latest`), Node.js không thể load file DLL của Windows và báo lỗi `invalid ELF header`.
+    - *Xử lý triệt để:*
+      1. Bổ sung lệnh `npm rebuild sqlite3` trong bước cài đặt phụ thuộc Backend:
+         ```bash
+         cd backend
+         npm rebuild sqlite3 || (rm -rf node_modules && npm install)
+         ```
+         Lệnh này tự động tải/biên dịch lại file nhị phân native `node_sqlite3.node` đúng định dạng ELF cho môi trường Linux x64 của GitHub Actions.
+      2. Cập nhật file cấu hình [ci-cd/api-tests.yml](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/ci-cd/api-tests.yml) và báo cáo [report/ci_cd_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/ci_cd_report.md).
+      3. Hướng dẫn sinh viên cập nhật vào file `.github/workflows/api-tests.yml` trên GitHub để pipeline hoàn thành 100%.

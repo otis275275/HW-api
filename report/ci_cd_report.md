@@ -38,7 +38,7 @@ jobs:
       - name: Install Backend Dependencies
         run: |
           cd backend
-          npm install
+          npm rebuild sqlite3 || (rm -rf node_modules && npm install)
 
       - name: Install Global Newman and HTMLExtra Reporter
         run: npm install -g newman newman-reporter-htmlextra
