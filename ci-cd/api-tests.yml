@@ -1,0 +1,54 @@
+name: EShop API Automated Testing CI/CD
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  api-tests:
+    name: Run Newman API Tests (Member M4 - 23120228)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Project Dependencies
+        run: npm ci || npm install
+
+      - name: Install Global Newman and HTMLExtra Reporter
+        run: npm install -g newman newman-reporter-htmlextra
+
+      - name: Initialize & Seed SQLite Database
+        run: node backend/database.js
+
+      - name: Start Backend Server in Background
+        run: |
+          nohup node backend/server.js > server.log 2>&1 &
+          sleep 3
+          curl -I http://localhost:3000/api/products || exit 1
+
+      - name: Run Newman Test Suite (Pool A, Pool B, Pool C)
+        run: |
+          mkdir -p report
+          newman run postman/m4_eshop_collection.json \
+            --environment postman/eshop_environment.json \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export report/newman_report.html \
+            --suppress-exit-code
+
+      - name: Upload Test Report Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: newman-api-test-report
+          path: report/newman_report.html

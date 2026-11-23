@@ -1,0 +1,122 @@
+﻿Pool / Feature,Test Case ID,Test Type / Category,Endpoint / Target,Input Data / Precondition,Expected Result
+Pool A (FR-03),TC-FR03-01,DP - Email hợp lệ tồn tại,`POST /api/forgot-password`,"`{""email"": ""test@eshop.com""}`","200 OK, trả về `message` và `resetToken`"
+Pool A (FR-03),TC-FR03-02,DP - Email không tồn tại,`POST /api/forgot-password`,"`{""email"": ""notfound@domain.com""}`","404 Not Found, thông báo lỗi"
+Pool A (FR-03),TC-FR03-03,DP - Email rỗng,`POST /api/forgot-password`,"`{""email"": """"}`",400 Bad Request
+Pool A (FR-03),TC-FR03-04,DP - Thiếu trường email,`POST /api/forgot-password`,`{}`,400 Bad Request
+Pool A (FR-03),TC-FR03-05,DP - Email thiếu ký tự `@`,`POST /api/forgot-password`,"`{""email"": ""testeshop.com""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-06,DP - Email thiếu phần domain,`POST /api/forgot-password`,"`{""email"": ""test@""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-07,DP - Email có khoảng trắng thừa,`POST /api/forgot-password`,"`{""email"": ""  test@eshop.com  ""}`",200 OK (trim) hoặc 400
+Pool A (FR-03),TC-FR03-08,DP - Email quá dài (>255 ký tự),`POST /api/forgot-password`,"`{""email"": ""a""*250 + ""@eshop.com""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-09,DP - SQLi trong trường email,`POST /api/forgot-password`,"`{""email"": ""' OR '1'='1""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-10,DP - XSS script trong email,`POST /api/forgot-password`,"`{""email"": ""<script>alert(1)</script>@domain.com""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-11,DP - Email định dạng Uppercase,`POST /api/forgot-password`,"`{""email"": ""TEST@ESHOP.COM""}`",200 OK (case-insensitive)
+Pool A (FR-03),TC-FR03-12,DP - ResetToken hợp lệ,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""{{activeResetToken}}"", ""newPassword"": ""NewPassword123!""}`","200 OK, `Password reset successfully`"
+Pool A (FR-03),TC-FR03-13,DP - ResetToken không đúng,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""000000"", ""newPassword"": ""NewPassword123!""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-14,DP - ResetToken rỗng,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": """", ""newPassword"": ""NewPassword123!""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-15,DP - Thiếu resetToken,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""newPassword"": ""NewPassword123!""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-16,DP - ResetToken là chuỗi chữ,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""ABCDEF"", ""newPassword"": ""NewPassword123!""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-17,DP - ResetToken quá ngắn (< 4 số),`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""12"", ""newPassword"": ""NewPassword123!""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-18,DP - ResetToken quá dài (> 6 số),`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""12345678"", ""newPassword"": ""NewPassword123!""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-19,DP - SQLi trong resetToken,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""' OR 1=1 --"", ""newPassword"": ""NewPassword123!""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-20,DP - Mật khẩu mới mạnh hợp lệ,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""{{freshResetToken}}"", ""newPassword"": ""SecurePass123!""}`",200 OK
+Pool A (FR-03),TC-FR03-21,DP - Mật khẩu mới quá ngắn (< 8 ký tự),`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""{{freshResetToken}}"", ""newPassword"": ""Pass1!""}`",400 Bad Request (vi phạm FR-01)
+Pool A (FR-03),TC-FR03-22,DP - Mật khẩu thiếu chữ hoa,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""{{freshResetToken}}"", ""newPassword"": ""password123!""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-23,DP - Mật khẩu thiếu chữ thường,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""{{freshResetToken}}"", ""newPassword"": ""PASSWORD123!""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-24,DP - Mật khẩu thiếu chữ số,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""{{freshResetToken}}"", ""newPassword"": ""PasswordSpecial!""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-25,DP - Mật khẩu thiếu ký tự đặc biệt,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""{{freshResetToken}}"", ""newPassword"": ""Password123""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-26,DP - Mật khẩu mới rỗng,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""{{freshResetToken}}"", ""newPassword"": """"}`",400 Bad Request
+Pool A (FR-03),TC-FR03-27,DP - Mật khẩu toàn khoảng trắng,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ""resetToken"": ""{{freshResetToken}}"", ""newPassword"": ""        ""}`",400 Bad Request
+Pool A (FR-03),TC-FR03-28,ST - Luồng đầy đủ: Forgot -> Reset -> Login,Sequence: Forgot -> Reset -> Login,Lấy token -> Đặt pass mới -> Đăng nhập pass mới,200 OK ở cả 3 bước
+Pool A (FR-03),TC-FR03-29,ST - Token hủy sau khi dùng 1 lần,Sequence: Forgot -> Reset (1) -> Reset (2),Thử đặt lại lần 2 bằng cùng token,"Lần 1: 200 OK, Lần 2: 400 Bad Request"
+Pool A (FR-03),TC-FR03-30,ST - Đăng nhập bằng pass cũ sau reset,Sequence: Reset pass -> Login pass cũ,`password: Test1234!`,401 Unauthorized
+Pool A (FR-03),TC-FR03-31,ST - Yêu cầu OTP 2 lần liên tiếp,Sequence: Forgot (1) -> Forgot (2),Kiểm tra tính hiệu lực của Token cũ,"Token cũ bị vô hiệu, Token mới có hiệu lực"
+Pool A (FR-03),TC-FR03-32,SEC - Kiểm tra độ dài OTP (SEC-07),`POST /api/forgot-password`,"`{""email"": ""test@eshop.com""}`",OTP phải có độ dài $\ge 6$ ký tự số
+Pool A (FR-03),TC-FR03-33,SEC - Dùng OTP User A cho User B,`POST /api/reset-password`,"`{""email"": ""admin@eshop.com"", ""resetToken"": ""{{activeResetToken}}"", ...}`",400 Bad Request (Cross-account attack)
+Pool A (FR-03),TC-FR03-34,SEC - Bảo mật mật khẩu (SEC-01),`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ...}`",Phản hồi không trả về password dạng plaintext
+Pool A (FR-03),TC-FR03-35,Schema - Schema của Forgot Password,`POST /api/forgot-password`,"`{""email"": ""test@eshop.com""}`","Body đúng JSON schema: `{message: string, resetToken: string}`"
+Pool A (FR-03),TC-FR03-36,Schema - Schema của Reset Password,`POST /api/reset-password`,"`{""email"": ""test@eshop.com"", ...}`",Body đúng JSON schema: `{message: string}`
+Pool A (FR-03),TC-FR03-EXT01,**Thời hạn hết hạn của OTP (Expiration Timeout)**,"Gửi yêu cầu Forgot, đợi vượt quá thời hạn (ví dụ > 5 phút) rồi mới gọi Reset Password.",400 Bad Request (Mã OTP đã hết hạn).,"AI thường chỉ sinh test dựa trên request/response tĩnh, không tự suy luận về trục thời gian (Time-based State) nếu spec không ghi rõ trường timestamp. Trong code SUT, DB thậm chí không lưu cột `token_expired_at`!"
+Pool A (FR-03),TC-FR03-EXT02,**Chống Brute-force OTP (Rate Limiting)**,Gửi 10 request đoán mã OTP liên tiếp với các mã ngẫu nhiên sai trên endpoint `/api/reset-password`.,429 Too Many Requests hoặc khóa OTP sau 5 lần đoán sai.,AI tập trung vào các status code 200/400 thông thường mà bỏ qua khía cạnh kiểm thử an ninh chống tấn công vét cạn (Brute-force attack on low-entropy tokens).
+Pool A (FR-03),TC-FR03-EXT03,**Ngăn chặn đặt lại mật khẩu trùng mật khẩu cũ**,Gọi `/api/reset-password` với `newPassword` giống hệt mật khẩu hiện tại (`Test1234!`).,400 Bad Request (Mật khẩu mới không được trùng mật khẩu cũ).,"Đặc tả API không nêu rõ ràng rule này, nên AI chỉ bám vào validation cú pháp mà bỏ sót ràng buộc lịch sử mật khẩu (Password History Policy)."
+Pool A (FR-03),TC-FR03-EXT04,**Tranh chấp đồng thời (Race Condition on Reset)**,Gửi đồng thời 2 request reset password với cùng một token qua 2 luồng song song.,"Chỉ có duy nhất 1 request thành công, request còn lại bị từ chối 400.",AI sinh test case tuần tự (Sequential testing) và không tự động mô phỏng các kịch bản bất đồng bộ / tấn công tranh chấp tài nguyên (Concurrency / Race Condition).
+Pool A (FR-03),TC-FR03-EXT05,**Bảo mật phản hồi tránh User Enumeration**,"Gửi email không tồn tại tới `/api/forgot-password`. Trong hệ thống chuẩn, thông báo nên chung chung: *""Nếu email tồn tại, mã đã được gửi""*.",200 OK hoặc thông báo generic để tránh lộ thông tin người dùng.,"SUT trả về 404 `""User not found""`, giúp hacker quét được danh sách email có trong hệ thống (User Enumeration Vulnerability). AI không nhận thức được khuyến nghị an toàn này nếu không được prompt chuyên sâu."
+Pool B (FR-09),TC-FR09-01,C1 - Mã giảm giá hợp lệ hoạt động,"`{""code"": ""SAVE10"", ""total_amount"": 500000, ""user_id"": 2}`","SAVE10 (10%, min 300k, còn hạn)","200 OK, giảm 50.000, còn 450.000"
+Pool B (FR-09),TC-FR09-02,C1 - Mã cố định (fixed) hợp lệ,"`{""code"": ""BIGBUY"", ""total_amount"": 600000, ""user_id"": 2}`","BIGBUY (50k, min 500k, còn hạn)","200 OK, giảm 50.000, còn 550.000"
+Pool B (FR-09),TC-FR09-03,C1 - Mã không tồn tại trong CSDL,"`{""code"": ""UNKNOWN99"", ""total_amount"": 500000, ""user_id"": 2}`",Mã không có trong bảng coupons,404 Not Found
+Pool B (FR-09),TC-FR09-04,C1 - Mã bị vô hiệu hóa (`is_active = 0`),"`{""code"": ""INACTIVE10"", ""total_amount"": 500000, ""user_id"": 2}`",Mã có `is_active = 0`,404 Not Found
+Pool B (FR-09),TC-FR09-05,C1 - Mã giảm giá rỗng,"`{""code"": """", ""total_amount"": 500000, ""user_id"": 2}`",Chuỗi rỗng,400 Bad Request
+Pool B (FR-09),TC-FR09-06,C1 - Thiếu trường `code`,"`{""total_amount"": 500000, ""user_id"": 2}`",Không truyền key `code`,400 Bad Request
+Pool B (FR-09),TC-FR09-07,C1 - SQLi trong mã giảm giá,"`{""code"": ""' OR '1'='1"", ""total_amount"": 500000, ""user_id"": 2}`",SQL Injection payload,404 Not Found (hoặc 400)
+Pool B (FR-09),TC-FR09-08,C1 - Mã dạng chữ thường,"`{""code"": ""save10"", ""total_amount"": 500000, ""user_id"": 2}`",Kiểm tra case-insensitivity,200 OK hoặc 404
+Pool B (FR-09),TC-FR09-09,C2 - Mã đã hết hạn,"`{""code"": ""EXPIRED"", ""total_amount"": 200000, ""user_id"": 2}`",EXPIRED (`expired_at: 2020-01-01`),"400 Bad Request (""Mã đã hết hạn"")"
+Pool B (FR-09),TC-FR09-10,C2 - Mã vừa hết hạn (Biên quá khứ 1 giây),"`{""code"": ""JUST_EXPIRED"", ""total_amount"": 500000, ""user_id"": 2}`",Ngày hiện tại > `expired_at`,400 Bad Request
+Pool B (FR-09),TC-FR09-11,C2 - Mã còn hạn dài (2099-12-31),"`{""code"": ""SAVE10"", ""total_amount"": 400000, ""user_id"": 2}`",Ngày hiện tại < `expired_at`,200 OK
+Pool B (FR-09),TC-FR09-12,C3 - Đơn hàng nhỏ hơn mức tối thiểu,"`{""code"": ""SAVE10"", ""total_amount"": 299999, ""user_id"": 2}`","min: 300.000, input: 299.999",400 Bad Request
+Pool B (FR-09),TC-FR09-13,**C3 - Đơn hàng BẰNG CHÍNH XÁC mức tối thiểu**,"`{""code"": ""SAVE10"", ""total_amount"": 300000, ""user_id"": 2}`","min: 300.000, input: 300.000",**200 OK (Spec: >= min_order_amount)**
+Pool B (FR-09),TC-FR09-14,C3 - Đơn hàng lớn hơn mức tối thiểu 1 đơn vị,"`{""code"": ""SAVE10"", ""total_amount"": 300001, ""user_id"": 2}`","min: 300.000, input: 300.001",200 OK
+Pool B (FR-09),TC-FR09-15,C3 - Đơn hàng giá trị 0 đồng,"`{""code"": ""SAVE10"", ""total_amount"": 0, ""user_id"": 2}`",input: 0,400 Bad Request
+Pool B (FR-09),TC-FR09-16,C3 - Đơn hàng giá trị âm,"`{""code"": ""SAVE10"", ""total_amount"": -100000, ""user_id"": 2}`",input: -100.000,400 Bad Request
+Pool B (FR-09),TC-FR09-17,C3 - Thiếu trường `total_amount`,"`{""code"": ""SAVE10"", ""user_id"": 2}`",Không truyền `total_amount`,400 Bad Request
+Pool B (FR-09),TC-FR09-18,C3 - `total_amount` là chuỗi chữ,"`{""code"": ""SAVE10"", ""total_amount"": ""abc"", ""user_id"": 2}`",Sai kiểu dữ liệu,400 Bad Request
+Pool B (FR-09),TC-FR09-19,C3 - `total_amount` là số thực (float),"`{""code"": ""SAVE10"", ""total_amount"": 350000.5, ""user_id"": 2}`",Số thập phân,200 OK
+Pool B (FR-09),TC-FR09-20,C4 - Áp dụng khi chưa đăng nhập (Không token),"`{""code"": ""SAVE10"", ""total_amount"": 500000}` (No Bearer)",Thiếu Header Authorization,401 Unauthorized (vi phạm C4)
+Pool B (FR-09),TC-FR09-21,C4 - Áp dụng với Token giả mạo/hết hạn,"`{""code"": ""SAVE10"", ""total_amount"": 500000}` (Token invalid)",Bearer invalid,403 Forbidden
+Pool B (FR-09),TC-FR09-22,C4 - Truyền `user_id` không khớp với Token,"`{""code"": ""SAVE10"", ""total_amount"": 500000, ""user_id"": 999}`","Token User 2, body user_id 999",403 Forbidden (chống giả mạo ID)
+Pool B (FR-09),TC-FR09-23,C5 - Sử dụng mã lần đầu tiên (Usage = 0),"`{""code"": ""SAVE10"", ""total_amount"": 500000, ""user_id"": 2}`",Chưa từng dùng SAVE10,200 OK
+Pool B (FR-09),TC-FR09-24,C5 - Sử dụng mã lần 2 khi giới hạn là 1,Sequence: Dùng SAVE10 -> Checkout -> Áp dụng lại,"max_uses = 1, lần 2","400 Bad Request (""Đã đạt giới hạn"")"
+Pool B (FR-09),TC-FR09-25,C5 - Dùng mã VIP100 lần 1 (max_uses = 2),"`{""code"": ""VIP100"", ""total_amount"": 400000, ""user_id"": 2}`",Lần 1 trên 2,200 OK
+Pool B (FR-09),TC-FR09-26,C5 - Dùng mã VIP100 lần 2 (max_uses = 2),Sequence: Dùng VIP100 (1) -> Dùng VIP100 (2),Lần 2 trên 2,200 OK
+Pool B (FR-09),TC-FR09-27,C5 - Dùng mã VIP100 lần 3 (Vượt giới hạn),Sequence: VIP100 (1) -> VIP100 (2) -> Lần 3,Lần 3 trên 2,"400 Bad Request (""Đã đạt giới hạn"")"
+Pool B (FR-09),TC-FR09-28,Math - Kiểm tra tính giảm giá phần trăm,"`{""code"": ""SAVE10"", ""total_amount"": 500000, ""user_id"": 2}`",Giảm 10% của 500k,"`discount_amount: 50000`, `final_amount: 450000`"
+Pool B (FR-09),TC-FR09-29,Math - Kiểm tra tính giảm giá cố định,"`{""code"": ""BIGBUY"", ""total_amount"": 500000, ""user_id"": 2}`",Giảm cố định 50k,"`discount_amount: 50000`, `final_amount: 450000`"
+Pool B (FR-09),TC-FR09-30,Math - Tiền giảm cố định lớn hơn tổng đơn,"`{""code"": ""BIGBUY"", ""total_amount"": 40000, ""user_id"": 2}`",Giảm 50k trên đơn 40k,`final_amount >= 0` (không được âm)
+Pool B (FR-09),TC-FR09-31,"ST - User A dùng hết lượt, User B dùng",Sequence: User 2 dùng hết lượt -> User 3 dùng,Giới hạn theo từng user,User 3 vẫn dùng được 200 OK
+Pool B (FR-09),TC-FR09-32,Schema - Schema thành công đầy đủ,"`{""code"": ""SAVE10"", ""total_amount"": 500000, ""user_id"": 2}`",Kiểm tra response keys,"Chứa `success`, `coupon_id`, `discount_amount`, `final_amount`, `message`"
+Pool B (FR-09),TC-FR09-33,Schema - Kiểu dữ liệu số của `final_amount`,"`{""code"": ""SAVE10"", ""total_amount"": 500000, ""user_id"": 2}`",Type assertion,`typeof final_amount === 'number'`
+Pool B (FR-09),TC-FR09-34,Schema - Error Schema khi thiếu code,"`{""total_amount"": 500000}`",Error schema,"400, `{error: string}`"
+Pool B (FR-09),TC-FR09-35,Schema - Error Schema khi mã hết hạn,"`{""code"": ""EXPIRED"", ""total_amount"": 500000}`",Error schema,"400, `{error: string}`"
+Pool B (FR-09),TC-FR09-EXT01,**Tranh chấp đồng thời khi áp dụng mã 1 lần (Race Condition)**,Gửi cùng lúc 2 request Checkout sử dụng mã `SAVE10` (chỉ cho phép 1 lần dùng) trong cùng 1 mili-giây.,"Chỉ có đúng 1 đơn hàng được giảm giá, đơn hàng thứ 2 bị báo lỗi đã hết lượt.",AI chỉ kiểm tra trạng thái tuần tự mà không tính đến lỗ hổng Race Condition khi database chưa kịp cập nhật bảng `coupon_usage` (Thiếu Transaction Lock / Mutex).
+Pool B (FR-09),TC-FR09-EXT02,**Hoàn lại lượt sử dụng mã khi đơn hàng bị HỦY**,"User dùng mã `SAVE10` (max 1 lần), đặt hàng thành công. Sau đó gọi `PUT /api/orders/:id/cancel` để hủy đơn, rồi thử dùng lại mã `SAVE10`.",Mã giảm giá phải được khôi phục quyền sử dụng cho user.,AI chỉ kiểm tra luồng áp dụng mã độc lập tại `/api/apply-coupon` mà không kết nối với chu trình hủy đơn (Order Cancellation Lifecycle). Thực tế SUT không hề xóa bản ghi trong `coupon_usage` khi hủy đơn!
+Pool B (FR-09),TC-FR09-EXT03,**Chống cộng dồn nhiều mã (Coupon Stacking)**,"Gửi mảng chứa 2 mã `[""SAVE10"", ""BIGBUY""]` hoặc gọi liên tiếp 2 lần apply coupon trên cùng 1 giỏ hàng.","Hệ thống từ chối hoặc chỉ áp dụng mã có lợi nhất, không cho cộng dồn trái phép.","Đặc tả chỉ định nghĩa nhận vào 1 `code` dạng string đơn lẻ, nên AI không suy luận kịch bản attacker cố tình gửi cấu trúc dữ liệu dạng mảng hoặc lặp để cộng dồn giảm giá."
+Pool B (FR-09),TC-FR09-EXT04,**Làm tròn tiền lẻ khi giảm theo phần trăm (Rounding Precision)**,"Áp dụng mã giảm 15% trên đơn hàng có tổng tiền lẻ `333.333 ₫` (`discount = 49.999,95 ₫`).","Số tiền giảm phải được làm tròn nguyên vẹn (ví dụ `50.000 ₫` hoặc `49.999 ₫`), không sinh ra số float với nhiều số thập phân lẻ.","AI thường giả định dữ liệu test là các số tròn chục nghìn/trăm nghìn, bỏ qua kiểm thử sai số dấu phẩy động (Floating point precision)."
+Pool B (FR-09),TC-FR09-EXT05,**Bảo vệ ranh giới giảm giá không vượt quá tổng đơn**,"Tạo mã giảm giá cố định `500.000 ₫`, áp dụng cho đơn hàng đúng `500.000 ₫` hoặc có phụ phí.","`final_amount` tối thiểu phải là `0 ₫`, không bao giờ được phép là số âm.",AI ít khi kiểm tra các trường hợp biên tài chính đặc biệt (Extreme boundary logic) dẫn đến việc cửa hàng phải trả ngược tiền cho khách.
+Pool C (FR-19),TC-FR19-01,SEC - Admin lấy danh sách user hợp lệ,`GET /api/admin/users`,Token Admin (`role = 'admin'`),"200 OK, trả về danh sách user"
+Pool C (FR-19),TC-FR19-02,**SEC - User thường gọi API lấy danh sách user (SEC-03)**,`GET /api/admin/users`,Token User (`role = 'user'`),**403 Forbidden (Broken Access Control)**
+Pool C (FR-19),TC-FR19-03,SEC - Không có token gọi lấy danh sách user,`GET /api/admin/users`,Không gửi header Authorization,401 Unauthorized
+Pool C (FR-19),TC-FR19-04,SEC - Token giả mạo/không hợp lệ,`GET /api/admin/users`,`Bearer invalid_token_123`,403 Forbidden
+Pool C (FR-19),TC-FR19-05,SEC - Token hết hạn,`GET /api/admin/users`,`Bearer expired_token`,403 Forbidden
+Pool C (FR-19),TC-FR19-06,Data Exposure - Không để lộ password trong danh sách,`GET /api/admin/users`,Token Admin,Trong mảng user trả về KHÔNG có trường `password`
+Pool C (FR-19),TC-FR19-07,Data Exposure - Không để lộ reset_token,`GET /api/admin/users`,Token Admin,Trong mảng user trả về KHÔNG có trường `reset_token`
+Pool C (FR-19),TC-FR19-08,DP - Admin xóa user thành công,`DELETE /api/admin/users/2`,"Token Admin, ID user thường tồn tại","200 OK, `User deleted`"
+Pool C (FR-19),TC-FR19-09,**SEC - User thường gọi API xóa user khác (SEC-03)**,`DELETE /api/admin/users/2`,Token User (`role = 'user'`),**403 Forbidden (Broken Access Control)**
+Pool C (FR-19),TC-FR19-10,**SEC - User thường cố tình xóa Admin (SEC-03)**,`DELETE /api/admin/users/1`,Token User (`role = 'user'`),**403 Forbidden**
+Pool C (FR-19),TC-FR19-11,SEC - Không có token gọi API xóa user,`DELETE /api/admin/users/2`,Không gửi Authorization,401 Unauthorized
+Pool C (FR-19),TC-FR19-12,**Ràng buộc FR-19 - Admin tự xóa chính tài khoản đang đăng nhập**,`DELETE /api/admin/users/1`,"Token Admin (id = 1), param id = 1",**400 Bad Request / 403 Forbidden (Cấm tự xóa chính mình)**
+Pool C (FR-19),TC-FR19-13,DP - Xóa user không tồn tại,`DELETE /api/admin/users/9999`,"Token Admin, ID = 9999",404 Not Found
+Pool C (FR-19),TC-FR19-14,DP - ID user là số 0,`DELETE /api/admin/users/0`,"Token Admin, ID = 0",400 Bad Request / 404 Not Found
+Pool C (FR-19),TC-FR19-15,DP - ID user là số âm,`DELETE /api/admin/users/-5`,"Token Admin, ID = -5",400 Bad Request
+Pool C (FR-19),TC-FR19-16,DP - ID user là chuỗi chữ,`DELETE /api/admin/users/abc`,"Token Admin, ID = ""abc""",400 Bad Request
+Pool C (FR-19),TC-FR19-17,DP - ID user chứa ký tự đặc biệt,`DELETE /api/admin/users/@!#`,"Token Admin, ID = ""@!#""",400 Bad Request
+Pool C (FR-19),TC-FR19-18,DP - SQLi trong tham số ID,`DELETE /api/admin/users/1 OR 1=1`,"Token Admin, SQLi payload",400 Bad Request
+Pool C (FR-19),TC-FR19-19,DP - ID user là số cực lớn (Overflow),`DELETE /api/admin/users/999999999999999`,Token Admin,404 Not Found
+Pool C (FR-19),TC-FR19-20,ST - Vòng đời xóa user: Xóa -> Kiểm tra danh sách,Sequence: DELETE /api/admin/users/2 -> GET /api/admin/users,Token Admin,User ID 2 không còn xuất hiện trong danh sách
+Pool C (FR-19),TC-FR19-21,ST - User bị xóa không thể đăng nhập,Sequence: DELETE User 2 -> POST /api/login với User 2,Credentials User 2,401 Unauthorized
+Pool C (FR-19),TC-FR19-22,ST - Xóa user đã bị xóa trước đó (Idempotency),Sequence: DELETE User 2 (lần 1) -> DELETE User 2 (lần 2),Token Admin,"Lần 1: 200 OK, Lần 2: 404 Not Found"
+Pool C (FR-19),TC-FR19-23,ST - User bị xóa thì token cũ bị vô hiệu hóa,Sequence: User 2 lấy token -> Admin xóa User 2 -> User 2 gọi API,Token cũ của User 2,401 Unauthorized / 403 Forbidden
+Pool C (FR-19),TC-FR19-24,SEC - Kiểm tra role escalation qua JWT header,`GET /api/admin/users`,Token sửa role thành admin nhưng sai signature,403 Forbidden
+Pool C (FR-19),TC-FR19-25,Schema - Schema của `GET /api/admin/users`,`GET /api/admin/users`,Token Admin,Trả về mảng JSON đúng schema các trường
+Pool C (FR-19),TC-FR19-26,Schema - Kiểu dữ liệu trường trong user object,`GET /api/admin/users`,Token Admin,"`id` là integer, `email` là string, `role` là string"
+Pool C (FR-19),TC-FR19-27,Schema - Schema của `DELETE /api/admin/users/:id`,`DELETE /api/admin/users/2`,Token Admin,"Trả về `{ ""message"": ""User deleted"" }`"
+Pool C (FR-19),TC-FR19-28,DP - Admin xóa một user có đơn hàng,`DELETE /api/admin/users/2`,User 2 đã có đơn hàng,Xử lý toàn vẹn dữ liệu (Cascade/Restricted)
+Pool C (FR-19),TC-FR19-29,DP - Header Content-Type khi DELETE,`DELETE /api/admin/users/2`,Kiểm tra Content-Type,`application/json`
+Pool C (FR-19),TC-FR19-30,DP - HTTP Method không hợp lệ trên `/api/admin/users`,`POST /api/admin/users`,Không hỗ trợ POST tại endpoint này,404 Not Found / 405 Method Not Allowed
+Pool C (FR-19),TC-FR19-31,DP - HTTP Method không hợp lệ trên `/api/admin/users/:id`,`POST /api/admin/users/1`,Không hỗ trợ POST tại endpoint này,404 Not Found / 405 Method Not Allowed
+Pool C (FR-19),TC-FR19-32,Schema - Error Schema khi thiếu Authorization,`GET /api/admin/users`,Không token,"`{ ""error"": ""Unauthorized"" }` (401)"
+Pool C (FR-19),TC-FR19-33,Schema - Error Schema khi token không hợp lệ,`GET /api/admin/users`,Sai Bearer,"`{ ""error"": ""Forbidden"" }` (403)"
+Pool C (FR-19),TC-FR19-34,SEC - Kiểm tra SQL Injection qua Header Authorization,`GET /api/admin/users`,`Authorization: Bearer ' OR 1=1 --`,403 Forbidden
+Pool C (FR-19),TC-FR19-35,SEC - Kiểm tra XSS trong danh sách trả về,`GET /api/admin/users`,User có tên chứa thẻ HTML/Script,"Dữ liệu trả về dạng JSON thuần, không trigger script"
+Pool C (FR-19),TC-FR19-EXT01,**Xử lý toàn vẹn dữ liệu đơn hàng khi User bị xóa (Orphaned Records)**,User 2 tạo đơn hàng. Admin xóa User 2. Admin gọi `GET /api/admin/orders`.,"Các đơn hàng cũ của User 2 vẫn phải bảo toàn dữ liệu lịch sử hoặc hiển thị `user_name: ""[Deleted User]""`, không bị lỗi crash SQL JOIN `500 Internal Server Error`.","AI thường chỉ test cục bộ bảng `users` mà không kiểm tra tính toàn vẹn tham chiếu (Foreign Key Integrity) giữa các bảng `orders`, `cart`, `coupon_usage` với `users`."
+Pool C (FR-19),TC-FR19-EXT02,**Ngăn chặn xóa tài khoản Admin CUỐI CÙNG của hệ thống**,Hệ thống chỉ còn duy nhất 1 tài khoản Admin. Một tài khoản khác cố gắng xóa Admin này.,400 Bad Request (Hệ thống phải có tối thiểu một Quản trị viên đang hoạt động).,AI chỉ bám vào việc cấm tự xóa chính mình (Self-deletion) mà bỏ qua bài toán quản trị hệ thống: không bao giờ được phép xóa sạch toàn bộ admin khiến hệ thống mất quyền quản trị.
+Pool C (FR-19),TC-FR19-EXT03,**Xóa người dùng đang trong trạng thái bị KHÓA (Account Lockout)**,User đăng nhập sai 3 lần $\rightarrow$ bị khóa tạm thời (`locked_until`). Admin gọi `DELETE /api/admin/users/:id`.,Xóa thành công hoặc có cảnh báo tài khoản đang bị khóa.,"AI thường coi các thuộc tính bảo mật như `locked_until` là độc lập, không kết hợp trạng thái khóa tài khoản (Security Lock State) với tính năng CRUD của Admin."
+Pool C (FR-19),TC-FR19-EXT04,**Phân trang và giới hạn tải trọng (Pagination & DoS Prevention)**,"Tạo giả lập 1.000 users trong CSDL, sau đó gọi `GET /api/admin/users`.","API phải hỗ trợ query phân trang `?page=1&limit=20`, không được load toàn bộ 1.000 users cùng lúc gây cạn kiệt bộ nhớ.","Trong đặc tả API, endpoint không nhắc đến phân trang nên AI mặc định chỉ test lấy toàn bộ (`SELECT * FROM users`), bỏ qua bài toán hiệu năng và tấn công từ chối dịch vụ (DoS / Resource Exhaustion)."
+Pool C (FR-19),TC-FR19-EXT05,**Tranh chấp xóa người dùng đồng thời (Concurrent Delete)**,2 Admin đồng thời gửi lệnh xóa cùng User ID 2 trong cùng 1 mili-giây.,"1 request trả về 200 OK, request thứ 2 trả về 404 Not Found (Xử lý đồng thời nhất quán).",AI không tự động xây dựng các bài test bất đồng bộ phức tạp để kiểm tra cơ chế khóa bản ghi (Row-level Locking) của CSDL SQLite.

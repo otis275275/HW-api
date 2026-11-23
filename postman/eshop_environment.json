@@ -1,0 +1,49 @@
+{
+  "id": "eshop-local-environment",
+  "name": "EShop Local Environment (23120228)",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "studentId",
+      "value": "23120228",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "userToken",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "adminUserId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "testUserId",
+      "value": "2",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "generatedResetToken",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}
