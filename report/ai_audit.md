@@ -371,3 +371,31 @@ I use AI tools for the following tasks:
        - **#24:** `[BUG-M4-07][FR-19] DELETE /api/admin/users/:id allows logged-in admin to delete their own account` -> [Issue #24](https://github.com/otis275275/eshop-sut/issues/24)
        - **#25:** `[BUG-M4-08][FR-19] DELETE /api/admin/users/:id returns 200 OK 'User deleted' on non-existent IDs` -> [Issue #25](https://github.com/otis275275/eshop-sut/issues/25)
     4. **Cập nhật báo cáo tổng hợp:** Đồng bộ hóa toàn bộ các đường link GitHub Issues vào [report/bug_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/bug_report.md) và [report/main_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/main_report.md).
+
+### Interaction #17
+- **AI Tool:** Antigravity (Gemini 3.8 Flash)
+- **Date & Time:** 2026-11-23T17:55:28+07:00
+- **User Prompt:**
+  ```text
+  chuyển tất cả qua remote git remote add origin https://github.com/otis275275/HW-api.git và push 8 issues lên đó
+  ```
+- **AI Output:**
+  - **Chuyển toàn bộ dự án và 8 Bug Issues sang Repository `otis275275/HW-api`:**
+    1. **Khởi tạo 8 GitHub Issues trên `otis275275/HW-api`:**
+       - Tải và đồng bộ toàn bộ 8 file ảnh chụp bằng chứng vào nhánh `main` của repo `HW-api`.
+       - Tạo lần lượt 8 Issues chính thức (được cấp số thứ tự từ #1 đến #8) với tiêu đề chuẩn mực, nhãn dán severity, kịch bản cURL, bảng Actual vs Expected và ảnh chụp đính kèm:
+         - **#1:** `[BUG-M4-01][FR-03][SEC-07] POST /api/forgot-password generates 4-digit OTP instead of minimum 6 digits` -> [Issue #1](https://github.com/otis275275/HW-api/issues/1)
+         - **#2:** `[BUG-M4-02][FR-03][SEC-01] POST /api/reset-password stores plaintext password without complexity validation` -> [Issue #2](https://github.com/otis275275/HW-api/issues/2)
+         - **#3:** `[BUG-M4-03][FR-09] POST /api/apply-coupon uses strict '>' rejecting orders equal to min_order_amount` -> [Issue #3](https://github.com/otis275275/HW-api/issues/3)
+         - **#4:** `[BUG-M4-04][FR-09] POST /api/apply-coupon percent formula total * (1 - discount_value) produces negative amounts` -> [Issue #4](https://github.com/otis275275/HW-api/issues/4)
+         - **#5:** `[BUG-M4-05][FR-09] POST /api/apply-coupon missing authentication middleware (Condition C4 violated)` -> [Issue #5](https://github.com/otis275275/HW-api/issues/5)
+         - **#6:** `[BUG-M4-06][FR-19][SEC-03] Broken Access Control on /api/admin/users allows regular users to view and delete users` -> [Issue #6](https://github.com/otis275275/HW-api/issues/6)
+         - **#7:** `[BUG-M4-07][FR-19] DELETE /api/admin/users/:id allows logged-in admin to delete their own account` -> [Issue #7](https://github.com/otis275275/HW-api/issues/7)
+         - **#8:** `[BUG-M4-08][FR-19] DELETE /api/admin/users/:id returns 200 OK 'User deleted' on non-existent IDs` -> [Issue #8](https://github.com/otis275275/HW-api/issues/8)
+    2. **Đồng bộ hóa báo cáo tài liệu:**
+       - Cập nhật toàn bộ link Issues #1 đến #8 vào `report/bug_report.md` và `report/main_report.md`.
+    3. **Chuyển Git Remote và Đẩy Mã nguồn:**
+       - Cập nhật remote origin: `git remote set-url origin https://github.com/otis275275/HW-api.git`.
+       - Bảo vệ an toàn bí mật: che giấu mã PAT trong tài liệu và script để vượt qua GitHub Push Protection.
+       - Đẩy thành công 100% mã nguồn, bài làm, báo cáo, và dữ liệu kiểm thử lên `otis275275/HW-api` nhánh `main`.
+       - Xuất bản tệp lịch sử commit tại `report/git_commit_log.txt`.
