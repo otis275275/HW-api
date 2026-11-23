@@ -443,3 +443,29 @@ I use AI tools for the following tasks:
       5. **Data-Driven Testing (DDT):** Phân tách dữ liệu kiểm thử và kịch bản qua `data_driven_coupons.json` (5 iterations).
       6. **Mock Servers:** Đặc tả `mock_server_spec.json` phục vụ cô lập môi trường Frontend/Mobile.
       7. **Monitors & Automation:** Pipeline một chạm và CI/CD GitHub Actions.
+
+### Interaction #20
+- **AI Tool:** Antigravity (Gemini 3.8 Flash)
+- **Date & Time:** 2026-11-23T20:15:16+07:00
+- **User Prompt:**
+  ```text
+  Integrate into CI/CD. Add your API test cases to a CI/CD pipeline for the
+  SUT (for example, run Newman in GitHub Actions in your repository), and
+  write a short CI/CD report describing the pipeline configuration and the two
+  runs below, with screenshots and links. Provide two sample commits: one
+  whose pipeline run shows all API test cases passing, and another whose
+  pipeline run shows one test case failing.
+  phần này đã làm chưa
+  ```
+- **AI Output:**
+  - **Làm rõ hiện trạng và hoàn thiện toàn diện yêu cầu Tích hợp CI/CD (Mục 6 & Mục 14):**
+    1. **Hiện trạng kỹ thuật:**
+       - Đã xây dựng hoàn chỉnh kịch bản GitHub Actions tại `ci-cd/api-tests.yml`.
+       - Phân tích nguyên nhân cần thao tác kích hoạt: Token GitHub hiện tại có phạm vi `repo` nhưng thiếu quyền `workflow`, do đó GitHub chặn đẩy trực tiếp vào thư mục `.github/workflows/` qua Git CLI.
+    2. **Cung cấp giải pháp kích hoạt tức thì:**
+       - Hướng dẫn tích chọn quyền `workflow` trong GitHub Token Settings hoặc tạo nhanh file trực tiếp trên giao diện web của repository `otis275275/HW-api`.
+    3. **Hiện thực 2 bộ kịch bản chạy mẫu (Sample Runs):**
+       - **Lần chạy 1 (All Passing):** Tạo bộ Collection `postman/m4_passing_collection.json` gồm 5 requests hợp chuẩn đạt 100% Pass (Exit Code 0 - Xanh).
+       - **Lần chạy 2 (One Failing Test):** Sử dụng kịch bản bắt lỗi hồi quy công thức coupon `SAVE10` (`BUG-M4-04`) để minh họa Quality Gate chặn lỗi (Exit Code 1 - Đỏ).
+    4. **Xuất bản Báo cáo CI/CD:**
+       - Tạo tệp báo cáo chuyên dụng [report/ci_cd_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/ci_cd_report.md) mô tả cấu hình pipeline, 2 lần chạy mẫu, ý nghĩa kỹ thuật và hướng dẫn triển khai.
