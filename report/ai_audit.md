@@ -424,3 +424,22 @@ I use AI tools for the following tasks:
        - Tạo file đặc tả Mock Server `postman/mock_server_spec.json` mô phỏng phản hồi API khi Backend chưa sẵn sàng.
     4. **Cập nhật Báo cáo Tổng hợp:**
        - Bổ sung Mục 7.4 vào `report/main_report.md` liệt kê chi tiết 8 tính năng Postman đã áp dụng: Workspaces, Collections, Environments, Pre-request Scripts & Request Chaining (`pm.sendRequest`), Tests Scripts & IIFE Scope, Data-Driven Testing (DDT), Mock Servers, và Monitors/Runners.
+
+### Interaction #19
+- **AI Tool:** Antigravity (Gemini 3.8 Flash)
+- **Date & Time:** 2026-11-23T20:05:52+07:00
+- **User Prompt:**
+  ```text
+  Cụ thể là bạn áp dụng các tính năng đó như thế nào, nó giúp cái gì và proof là gì?
+  ```
+- **AI Output:**
+  - **Giải trình chi tiết, đa chiều về 8 tính năng Postman nâng cao đã áp dụng:**
+    - Trình bày mạch lạc theo cấu trúc chuẩn kiểm thử: *Cách áp dụng cụ thể* $\rightarrow$ *Lợi ích kỹ thuật giải quyết vấn đề gì* $\rightarrow$ *Minh chứng thực tế (Proof) trong mã nguồn và báo cáo*.
+    - Bao phủ toàn diện:
+      1. **Workspaces & Folder Hierarchy:** Phân cấp 4 tầng tách biệt các phân hệ.
+      2. **Environments & Dynamic Variables:** Tối ưu hóa DRY, quản lý tập trung cấu hình và dữ liệu ngẫu nhiên.
+      3. **Pre-request Scripts:** Tiêm tự động Header `X-Student-Id` (chống AI cheat) và Dynamic Token Chaining (`pm.sendRequest`) triệt tiêu Pass ảo.
+      4. **Tests Scripts & Chai.js Assertions:** Đóng gói mô hình IIFE cách ly phạm vi biến tuyệt đối.
+      5. **Data-Driven Testing (DDT):** Phân tách dữ liệu kiểm thử và kịch bản qua `data_driven_coupons.json` (5 iterations).
+      6. **Mock Servers:** Đặc tả `mock_server_spec.json` phục vụ cô lập môi trường Frontend/Mobile.
+      7. **Monitors & Automation:** Pipeline một chạm và CI/CD GitHub Actions.
