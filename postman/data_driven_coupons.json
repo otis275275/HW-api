@@ -1,0 +1,47 @@
+[
+  {
+    "testCase": "DDT-01: Valid percent coupon SAVE10 above threshold",
+    "code": "SAVE10",
+    "total_amount": 500000,
+    "user_id": 2,
+    "expectedStatus": 200,
+    "expectedDiscount": 50000,
+    "expectedFinal": 450000
+  },
+  {
+    "testCase": "DDT-02: Valid fixed coupon BIGBUY above threshold",
+    "code": "BIGBUY",
+    "total_amount": 600000,
+    "user_id": 2,
+    "expectedStatus": 200,
+    "expectedDiscount": 50000,
+    "expectedFinal": 550000
+  },
+  {
+    "testCase": "DDT-03: Order amount below minimum threshold",
+    "code": "SAVE10",
+    "total_amount": 200000,
+    "user_id": 2,
+    "expectedStatus": 400,
+    "expectedDiscount": 0,
+    "expectedFinal": 200000
+  },
+  {
+    "testCase": "DDT-04: Non-existent coupon code",
+    "code": "NON_EXISTENT_99",
+    "total_amount": 500000,
+    "user_id": 2,
+    "expectedStatus": 404,
+    "expectedDiscount": 0,
+    "expectedFinal": 500000
+  },
+  {
+    "testCase": "DDT-05: Expired coupon code",
+    "code": "EXPIRED",
+    "total_amount": 500000,
+    "user_id": 2,
+    "expectedStatus": 400,
+    "expectedDiscount": 0,
+    "expectedFinal": 500000
+  }
+]

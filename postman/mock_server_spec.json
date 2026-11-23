@@ -1,0 +1,73 @@
+{
+  "name": "EShop M4 Mock Server Configuration",
+  "description": "Postman Mock Server configuration for Member M4 (FR-03, FR-09, FR-19) allowing frontend and mobile development/testing without running a local backend instance.",
+  "mockUrl": "https://m4-eshop-mock.pstmn.io",
+  "routes": [
+    {
+      "method": "POST",
+      "endpoint": "/api/forgot-password",
+      "mockResponses": [
+        {
+          "name": "200 Success - Valid Email",
+          "statusCode": 200,
+          "body": {
+            "message": "If this email exists in our system, a password reset code has been sent.",
+            "resetToken": "824915"
+          }
+        },
+        {
+          "name": "400 Error - Missing Email",
+          "statusCode": 400,
+          "body": {
+            "error": "Email is required"
+          }
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "endpoint": "/api/apply-coupon",
+      "mockResponses": [
+        {
+          "name": "200 Success - SAVE10 Applied",
+          "statusCode": 200,
+          "body": {
+            "success": true,
+            "coupon_id": 1,
+            "discount_amount": 50000,
+            "final_amount": 450000,
+            "message": "Áp dụng mã giảm giá thành công"
+          }
+        },
+        {
+          "name": "400 Error - Expired Coupon",
+          "statusCode": 400,
+          "body": {
+            "error": "Mã giảm giá đã hết hạn"
+          }
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "endpoint": "/api/admin/users",
+      "mockResponses": [
+        {
+          "name": "200 Success - Admin User List",
+          "statusCode": 200,
+          "body": [
+            { "id": 1, "name": "Admin", "email": "admin@eshop.com", "role": "admin" },
+            { "id": 2, "name": "User", "email": "test@eshop.com", "role": "user" }
+          ]
+        },
+        {
+          "name": "403 Forbidden - Regular User Token",
+          "statusCode": 403,
+          "body": {
+            "error": "Forbidden: Admin privileges required"
+          }
+        }
+      ]
+    }
+  ]
+}

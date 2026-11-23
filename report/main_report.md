@@ -160,6 +160,29 @@ Hệ thống tự động:
 * **Lỗi cú pháp Script (SyntaxError):** 0
 * **Fail oan do thiếu Token:** 0
 
+### 7.4. Danh Sách Các Tính Năng Postman Đã Vận Dụng (Postman Features Used)
+Theo yêu cầu kỹ thuật của bài tập (Mục 6), sinh viên đã vận dụng tối đa các tính năng cốt lõi và nâng cao của Postman:
+
+1. **Workspaces:**
+   - Thiết lập Workspace `EShop-M4-Testing` để quản lý độc lập các tài nguyên kiểm thử của phân hệ M4, không bị lẫn lộn biến môi trường với các thành viên khác.
+2. **Collections & Folders Hierarchy:**
+   - Cấu trúc phân cấp logic rõ ràng: Thư mục tiền xử lý (`0. Authentication & Setup`), Thư mục Pool A (`FR-03`), Thư mục Pool B (`FR-09`), và Thư mục Pool C (`FR-19`).
+3. **Environments & Variables Scopes:**
+   - Sử dụng tệp môi trường [postman/eshop_environment.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/eshop_environment.json) quản lý các biến `baseUrl`, `studentId`, `adminToken`, `userToken`, `activeResetToken`.
+   - Vận dụng linh hoạt các cấp độ biến: *Global*, *Collection Variables*, *Environment Variables*, và *Dynamic Variables* (`{{$timestamp}}`, `{{$randomEmail}}`).
+4. **Pre-request Scripts & Dynamic Request Chaining:**
+   - **Collection-level Pre-request:** Tự động gán Header bắt buộc `X-Student-Id: 23120228` cho 100% request.
+   - **Dynamic Token Chaining (`pm.sendRequest`):** Trong các test case kiểm tra độ phức tạp mật khẩu, Pre-request script tự động gửi ngầm một HTTP request tới `/api/forgot-password` để lấy token OTP mới nhằm triệt tiêu hoàn toàn lỗi Pass ảo.
+5. **Tests Scripts & Chai.js Assertions:**
+   - Kiểm tra mã trạng thái HTTP, thời gian phản hồi, cấu trúc JSON Schema và logic nghiệp vụ. Toàn bộ mã assertion được đóng gói trong hàm IIFE `(function() { ... })();` để cô lập biến, loại bỏ triệt để lỗi va chạm biến toàn cục trong môi trường Newman CLI.
+6. **Data-Driven Testing (DDT - Collection Runner with Data File):**
+   - Xây dựng tệp dữ liệu kiểm thử độc lập [postman/data_driven_coupons.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/data_driven_coupons.json) chứa các bộ dữ liệu kiểm thử mã giảm giá (hợp lệ, hết hạn, dưới ngưỡng, mã rác,...).
+   - Thiết lập bộ Collection [postman/m4_ddt_collection.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/m4_ddt_collection.json) sử dụng `pm.iterationData.get(...)` để thực thi kiểm thử hàng loạt dữ liệu đầu vào.
+7. **Mock Servers:**
+   - Thiết kế đặc tả cấu hình Mock Server tại [postman/mock_server_spec.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/mock_server_spec.json) cung cấp các mock response chuẩn cho các endpoint M4, hỗ trợ phát triển Frontend/Mobile độc lập khi Backend chưa khả dụng.
+8. **Monitors & Automated Newman Runners:**
+   - Cung cấp script tự động hóa [run_tests.ps1](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.ps1) và [run_tests.bat](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.bat) tích hợp chạy kiểm thử tự động, trích xuất báo cáo HTML và tích hợp vào quy trình CI/CD GitHub Actions (`ci-cd/api-tests.yml`).
+
 ---
 
 ## 8. Thiết Kế Bộ Sinh Test AI (Agent Skill — Create Level G9.5)
