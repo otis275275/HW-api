@@ -34,10 +34,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install Project Dependencies
-        run: npm ci || npm install
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          npm install
 
       - name: Install Global Newman and HTMLExtra Reporter
         run: npm install -g newman newman-reporter-htmlextra

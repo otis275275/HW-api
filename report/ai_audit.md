@@ -469,3 +469,32 @@ I use AI tools for the following tasks:
        - **Lần chạy 2 (One Failing Test):** Sử dụng kịch bản bắt lỗi hồi quy công thức coupon `SAVE10` (`BUG-M4-04`) để minh họa Quality Gate chặn lỗi (Exit Code 1 - Đỏ).
     4. **Xuất bản Báo cáo CI/CD:**
        - Tạo tệp báo cáo chuyên dụng [report/ci_cd_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/ci_cd_report.md) mô tả cấu hình pipeline, 2 lần chạy mẫu, ý nghĩa kỹ thuật và hướng dẫn triển khai.
+
+### Interaction #21
+- **AI Tool:** Antigravity (Gemini 3.8 Flash)
+- **Date & Time:** 2026-11-23T20:28:01+07:00
+- **User Prompt:**
+  ```text
+  Phần cicd bị lỗi 
+  4s
+  Run actions/setup-node@v4
+  Attempting to download 20...
+  (node:2215) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+  (Use `node --trace-deprecation ...` to show where the warning was created)
+  Acquiring 20.20.2 - x64 from https://github.com/actions/node-versions/releases/download/20.20.2-23521894959/node-20.20.2-linux-x64.tar.gz
+  Extracting ...
+  /usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/da287ddb-db16-4fb3-8566-6fcca6442287 -f /home/runner/work/_temp/78ac8038-1f4b-42e8-8156-0e01c795b412
+  Adding to the cache ...
+  Environment details
+  /opt/hostedtoolcache/node/20.20.2/x64/bin/npm config get cache
+  /home/runner/.npm
+  Error: Dependencies lock file is not found in /home/runner/work/HW-api/HW-api. Supported file patterns: package-lock.json,npm-shrinkwrap.json,yarn.lock
+  ```
+- **AI Output:**
+  - **Khắc phục lỗi thiếu lockfile thư mục gốc trong GitHub Actions:**
+    - *Nguyên nhân:* Cấu hình `actions/setup-node@v4` có dòng `cache: 'npm'`, mặc định tìm kiếm file `package-lock.json` ở thư mục gốc của repo, trong khi `package.json` và `package-lock.json` của SUT thực tế nằm tại thư mục con `backend/`.
+    - *Xử lý triệt để:*
+      1. Bỏ tùy chọn `cache: 'npm'` trong bước `actions/setup-node@v4` để tránh lỗi tìm lockfile ở root.
+      2. Cập nhật bước cài đặt phụ thuộc chuyển vào đúng thư mục: `cd backend && npm install`.
+      3. Cập nhật nội dung file chuẩn hóa tại `ci-cd/api-tests.yml` và đồng bộ vào `report/ci_cd_report.md`.
+      4. Hướng dẫn sinh viên copy nội dung đã sửa dán đè vào `.github/workflows/api-tests.yml` trên GitHub để pipeline chạy thành công ngay lập tức.
