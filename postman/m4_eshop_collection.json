@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "m4-eshop-passing-collection-23120228",
-    "name": "EShop API - CI/CD All-Passing Suite (Member M4 - 23120228)",
+    "name": "EShop API - CI/CD One Failing Test Suite (Member M4 - 23120228)",
     "description": "Sample Postman Collection for CI/CD demonstration where 100% of API test cases pass successfully.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -37,15 +37,25 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\"email\": \"admin@eshop.com\", \"password\": \"Admin123!\"}"
         },
         "url": {
           "raw": "{{baseUrl}}/api/login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "login"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
         }
       }
     },
@@ -68,15 +78,25 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\"email\": \"test@eshop.com\", \"password\": \"Test1234!\"}"
         },
         "url": {
           "raw": "{{baseUrl}}/api/login",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "login"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "login"
+          ]
         }
       }
     },
@@ -99,15 +119,25 @@
       ],
       "request": {
         "method": "POST",
-        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\"email\": \"test@eshop.com\"}"
         },
         "url": {
           "raw": "{{baseUrl}}/api/forgot-password",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "forgot-password"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "forgot-password"
+          ]
         }
       }
     },
@@ -132,8 +162,14 @@
       "request": {
         "method": "POST",
         "header": [
-          {"key": "Content-Type", "value": "application/json"},
-          {"key": "Authorization", "value": "Bearer {{userToken}}"}
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{userToken}}"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -141,8 +177,13 @@
         },
         "url": {
           "raw": "{{baseUrl}}/api/apply-coupon",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "apply-coupon"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "apply-coupon"
+          ]
         }
       }
     },
@@ -166,12 +207,67 @@
       "request": {
         "method": "GET",
         "header": [
-          {"key": "Authorization", "value": "Bearer {{adminToken}}"}
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminToken}}"
+          }
         ],
         "url": {
           "raw": "{{baseUrl}}/api/admin/users",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "admin", "users"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "admin",
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2.2 FR-09 Apply Coupon - Percent SAVE10 (Failing Assertion on BUG-M4-04)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "(function() {",
+              "  const json = pm.response.json();",
+              "  pm.test(\"[BUG-M4-04] SAVE10 10% of 500,000 must equal 50,000\", () => {",
+              "    pm.expect(json.discount_amount).to.eql(50000);",
+              "  });",
+              "})();"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{userToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"code\": \"SAVE10\", \"total_amount\": 500000, \"user_id\": 2}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/apply-coupon",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "apply-coupon"
+          ]
         }
       }
     }
