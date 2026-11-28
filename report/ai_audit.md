@@ -599,3 +599,15 @@ I use AI tools for the following tasks:
     3. **Khôi phục Collection chuẩn:** Commit [`b3169bd`](https://github.com/otis275275/HW-api/commit/b3169bd) khôi phục lại đầy đủ 111 requests cho `postman/m4_eshop_collection.json`.
     4. **Chụp 2 ảnh thật từ GitHub Actions bằng Playwright:** Lưu tại [report/screenshots/cicd_run_pass.png](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/screenshots/cicd_run_pass.png) và [report/screenshots/cicd_run_fail.png](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/screenshots/cicd_run_fail.png).
     5. **Đồng bộ toàn bộ báo cáo & đóng gói:** Cập nhật [report/ci_cd_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/ci_cd_report.md), [report/main_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/main_report.md), xuất lại `git_commit_log.txt`, xuất lại các file `.pdf` và đóng gói lại `23120228_HW06_AI_API_100.zip`.
+
+### Interaction #27
+- **AI Tool:** Antigravity (Gemini 4 Hydrogen)
+- **Date & Time:** 2026-11-28T10:31:31+07:00
+- **User Prompt:**
+  ```text
+  [Uploaded Postman Console screenshot showing POST http://localhost:3000/api/login with Request Headers X-Student-Id: "23120228"]
+  ```
+- **AI Output:**
+  - **Xác nhận ảnh chụp Postman Console đạt chuẩn 100% yêu cầu Anti-AI-Cheat (Mục 11):**
+    - Lưu ảnh chụp vào `report/screenshots/postman_console_student_id.jpg` và nhúng trực tiếp vào Mục 7.1 của [report/main_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/main_report.md).
+    - Xuất lại PDF báo cáo chính & Audit, cập nhật `report/git_commit_log.txt`, đẩy lên GitHub và đóng gói lại `23120228_HW06_AI_API_100.zip`.

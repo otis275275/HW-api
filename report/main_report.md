@@ -139,6 +139,9 @@ const studentId = pm.environment.get('studentId') || '23120228';
 pm.request.headers.upsert({ key: 'X-Student-Id', value: studentId });
 console.log('[M4 Automation] Injected X-Student-Id:', studentId);
 ```
+**Ảnh chụp màn hình Postman Console thực tế chứng minh Header `X-Student-Id: 23120228` đã được tiêm thành công khi gọi `POST http://localhost:3000/api/login`:**
+
+![Postman Console X-Student-Id Evidence](screenshots/postman_console_student_id.jpg)
 
 ### 7.2. Lệnh Chạy Tự Động Một Chạm
 Sinh viên cung cấp sẵn script [run_tests.ps1](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.ps1) và [run_tests.bat](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.bat). Khi thực thi:

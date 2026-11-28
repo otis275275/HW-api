@@ -1,4 +1,5 @@
-555b3c1 - Otis, 2026-11-28 10:24:29 +0700 : docs: add real CI/CD pass/fail commit links, screenshots, and updated PDFs
+aa9051d - Otis, 2026-11-28 10:32:51 +0700 : docs: add authentic Postman Console screenshot for X-Student-Id evidence
+fa6b4df - Otis, 2026-11-28 10:24:29 +0700 : docs: add real CI/CD pass/fail commit links, screenshots, and updated PDFs
 b3169bd - Otis, 2026-11-28 10:22:08 +0700 : chore: restore full 111-request test collection after CI/CD sample runs
 aa2914b - Otis, 2026-11-28 10:21:07 +0700 : ci(test): sample commit 2 - one API test case failing on BUG-M4-04 (23120228)
 65c7cbc - Otis, 2026-11-28 10:19:45 +0700 : ci(test): sample commit 1 - all API test cases passing (23120228)
