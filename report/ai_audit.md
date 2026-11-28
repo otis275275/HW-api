@@ -571,3 +571,16 @@ I use AI tools for the following tasks:
        - Mỗi ảnh chụp trực tiếp thẻ kết quả thất bại của từng Bug (`TC-FR03-32`, `TC-FR03-21`, `TC-FR09-13`, `TC-FR09-01`, `TC-FR09-20`, `TC-FR19-02`, `TC-FR19-12`, `TC-FR19-13`) trong giao diện chính thức của `newman-reporter-htmlextra`.
        - Hiển thị đầy đủ bằng chứng xác thực: Request URL (`http://localhost:3000/...`), Header `X-Student-Id: 23120228`, `PostmanRuntime/7.39.1`, Request Body, Response Body thực tế từ SUT và bảng Chai.js `TEST FAILURE`.
     4. **Đồng bộ GitHub & Đóng gói lại file nộp bài:** Đẩy 8 ảnh thật lên `otis275275/HW-api` (tự động cập nhật ảnh hiển thị trên cả 8 GitHub Issues #1–#8) và đóng gói lại `23120228_HW06_AI_API_100.zip`.
+
+### Interaction #25
+- **AI Tool:** Antigravity (Gemini 4 Hydrogen)
+- **Date & Time:** 2026-11-28T10:01:02+07:00
+- **User Prompt:**
+  ```text
+  Đây là key github ghp_REDACTED_GITHUB_PERSONAL_ACCESS_TOKEN
+  lên tạo lai các issue với các ảnh này cho tui https://github.com/otis275275/HW-api/issues
+  ```
+- **AI Output:**
+  - **Cập nhật toàn bộ 8 GitHub Issues (#1–#8) trên `otis275275/HW-api` hiển thị ảnh chụp Newman thật:**
+    - Sử dụng GitHub REST API (`PATCH /repos/otis275275/HW-api/issues/{number}`) để cập nhật trực tiếp toàn bộ 8 Issues (`#1` đến `#8`), trỏ URL ảnh chụp về đúng mã commit `86ae36b` (commit chứa 8 ảnh chụp thật từ `report/newman_report.html`), loại bỏ hoàn toàn cache ảnh cũ của GitHub Camo Proxy.
+    - Xác nhận cập nhật thành công cả 8 đường dẫn: `https://github.com/otis275275/HW-api/issues/1` đến `/issues/8`.
