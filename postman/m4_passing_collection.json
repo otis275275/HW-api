@@ -40,7 +40,7 @@
         "header": [{"key": "Content-Type", "value": "application/json"}],
         "body": {
           "mode": "raw",
-          "raw": "{\"email\": \"admin@eshop.com\", \"password\": \"admin123\"}"
+          "raw": "{\"email\": \"admin@eshop.com\", \"password\": \"Admin123!\"}"
         },
         "url": {
           "raw": "{{baseUrl}}/api/login",
