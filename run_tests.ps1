@@ -1,4 +1,4 @@
-# Automated Test Runner for Member M4 (HW06 EShop API Testing)
+﻿# Automated Test Runner for Member M4 (HW06 EShop API Testing)
 # Usage: powershell -ExecutionPolicy Bypass -File .\run_tests.ps1
 
 Write-Host "==========================================================" -ForegroundColor Cyan
@@ -34,11 +34,11 @@ $jsonPath = Join-Path $PSScriptRoot "report\newman_results.json"
 
 try {
     if (Get-Command newman.cmd -ErrorAction SilentlyContinue) {
-        & newman.cmd run "$collectionPath" -e "$envPath" -r cli -r htmlextra -r json --reporter-htmlextra-export "$reportPath" --reporter-json-export "$jsonPath" --suppress-exit-code
+        & newman.cmd run "$collectionPath" -e "$envPath" -r "cli,htmlextra,json" --reporter-htmlextra-export "$reportPath" --reporter-json-export "$jsonPath" --suppress-exit-code
     } elseif (Get-Command newman -ErrorAction SilentlyContinue) {
-        & newman run "$collectionPath" -e "$envPath" -r cli -r htmlextra -r json --reporter-htmlextra-export "$reportPath" --reporter-json-export "$jsonPath" --suppress-exit-code
+        & newman run "$collectionPath" -e "$envPath" -r "cli,htmlextra,json" --reporter-htmlextra-export "$reportPath" --reporter-json-export "$jsonPath" --suppress-exit-code
     } else {
-        & npx.cmd newman run "$collectionPath" -e "$envPath" -r cli -r htmlextra -r json --reporter-htmlextra-export "$reportPath" --reporter-json-export "$jsonPath" --suppress-exit-code
+        & npx.cmd newman run "$collectionPath" -e "$envPath" -r "cli,htmlextra,json" --reporter-htmlextra-export "$reportPath" --reporter-json-export "$jsonPath" --suppress-exit-code
     }
 } catch {
     Write-Host "Newman execution error: $_" -ForegroundColor Red
