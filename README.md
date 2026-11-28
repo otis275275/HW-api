@@ -3,6 +3,7 @@
 **Họ và tên:** Thành viên M4  
 **Mã số sinh viên (StudentID):** `23120228`  
 **GitHub Repository:** [https://github.com/otis275275/HW-api](https://github.com/otis275275/HW-api)  
+**Video Demo Agent Skill (YouTube):** [https://www.youtube.com/watch?v=M33xqn3My3A](https://www.youtube.com/watch?v=M33xqn3My3A)  
 **Tên file nộp bài:** `23120228_HW06_AI_API_100.zip`
 
 ---
@@ -14,7 +15,7 @@
 | **1** | **API 1 (FR-03: Forgot/Reset Password):** Toàn bộ pipeline (Generate $\ge 35$ + Audit + Extend + Execute Newman + Bug report) | **30** | **30** | Đầy đủ 36 AI test cases + Audit từng dòng + 5 test cases mở rộng + Bắt đúng BUG-M4-01 (SEC-07) và BUG-M4-02 (SEC-01) kèm GitHub Issues #1, #2. |
 | **2** | **API 2 (FR-09: Apply Coupon):** Toàn bộ pipeline (cùng tiêu chí) | **30** | **30** | Đầy đủ 35 AI test cases (C1–C5) + Audit từng dòng + 5 test cases mở rộng + Bắt đúng BUG-M4-03 (Biên >), BUG-M4-04 (Toán âm), BUG-M4-05 (Auth) kèm GitHub Issues #3, #4, #5. |
 | **3** | **API 3 (FR-19: Admin Users):** Toàn bộ pipeline (cùng tiêu chí) | **30** | **30** | Đầy đủ 35 AI test cases + Audit từng dòng + 5 test cases mở rộng + Bắt đúng BUG-M4-06 (BAC), BUG-M4-07 (Tự xóa), BUG-M4-08 (REST ID rác) kèm GitHub Issues #6, #7, #8. |
-| **4** | **Agent Skills (AI-Driven Test Generator):** Thiết kế bộ sinh test tự động (G9.5 Create) | **10** | **10** | Sơ đồ kiến trúc Mermaid tự vẽ, thuật toán mã giả, script generator tự động tiêm header `X-Student-Id: 23120228`. |
+| **4** | **Agent Skills (AI-Driven Test Generator):** Thiết kế bộ sinh test tự động (G9.5 Create) | **10** | **10** | Sơ đồ kiến trúc Mermaid tự vẽ, thuật toán mã giả, script generator tự động tiêm header `X-Student-Id: 23120228`, **Video YouTube Demo:** [https://www.youtube.com/watch?v=M33xqn3My3A](https://www.youtube.com/watch?v=M33xqn3My3A). |
 | **TỔNG** | **Tổng điểm đồ án HW06** | **100** | **100** | **Đầy đủ 100% tài liệu, CI/CD, Postman DDT, Mock Server và bằng chứng.** |
 
 ---

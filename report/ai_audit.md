@@ -611,3 +611,18 @@ I use AI tools for the following tasks:
   - **Xác nhận ảnh chụp Postman Console đạt chuẩn 100% yêu cầu Anti-AI-Cheat (Mục 11):**
     - Lưu ảnh chụp vào `report/screenshots/postman_console_student_id.jpg` và nhúng trực tiếp vào Mục 7.1 của [report/main_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/main_report.md).
     - Xuất lại PDF báo cáo chính & Audit, cập nhật `report/git_commit_log.txt`, đẩy lên GitHub và đóng gói lại `23120228_HW06_AI_API_100.zip`.
+
+### Interaction #28
+- **AI Tool:** Antigravity (Gemini 4 Hydrogen)
+- **Date & Time:** 2026-11-28T11:31:19+07:00
+- **User Prompt:**
+  ```text
+  https://www.youtube.com/watch?v=M33xqn3My3A
+  đây là video tui đã quay demo skill agent, viết vào báo cáo đi
+  ```
+- **AI Output:**
+  - **Tích hợp Video Minh chứng Demo Agent Skill (Mục 7 / G9.5 Create Level):**
+    - Cập nhật liên kết video YouTube chính thức [https://www.youtube.com/watch?v=M33xqn3My3A](https://www.youtube.com/watch?v=M33xqn3My3A) vào Mục 8.3 của [report/main_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/main_report.md) và thông tin đầu trang [README.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/README.md) cũng như Bảng tự đánh giá Self-Assessment.
+    - Tóm tắt 5 nội dung chính của video: Giới thiệu MSSV `23120228` (Member M4), Kiến trúc Agent Skill 5 tầng, Thực thi sinh test tự động cho FR-09, Thực thi kiểm thử trên Postman & Newman bóc trần bug thực tế `BUG-M4-04`, và Minh chứng CI/CD GitHub Actions.
+    - Biên dịch lại toàn bộ tài liệu PDF (`main_report.pdf`, `ai_audit.pdf`, `ai_critique.pdf`), cập nhật Git và đóng gói file nộp bài `23120228_HW06_AI_API_100.zip`.
+

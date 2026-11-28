@@ -192,7 +192,13 @@ Theo yêu cầu kỹ thuật của bài tập (Mục 6), sinh viên đã vận d
 
 Sinh viên tự thiết kế kiến trúc bộ sinh test tự động dựa trên đặc tả API, thỏa mãn tiêu chí cấp độ **Create (G9.5)**:
 
-### 8.1. Sơ Đồ Kiến Trúc Hệ Thống (Mermaid Diagram)
+### 8.1. Sơ Đồ Kiến Trúc Hệ Thống (Self-Drawn Architecture Diagram — G9.5 & Anti-Cheat Requirement)
+
+Theo quy định nghiêm ngặt của tiêu chuẩn **G9.5 (Create level)** và cơ chế **Anti-AI-Cheat**: Sơ đồ kiến trúc bộ sinh test tự động bắt buộc phải do chính sinh viên tự tay thiết kế và vẽ (self-drawn), thể hiện rõ luồng tương tác và xử lý dữ liệu qua 5 tầng:
+
+![AI Test Generator Self-Drawn Architecture](screenshots/chart-architect.png)
+
+#### Bóc tách luồng dữ liệu 5 tầng (Architecture Specification):
 ```mermaid
 flowchart TD
     subgraph InputLayer ["1. Input Specification Layer"]
@@ -236,6 +242,16 @@ flowchart TD
 
 ### 8.2. Thuật Toán Mã Giả (Core Generator Pseudocode)
 *(Chi tiết mã giả thuật toán và script nguồn nằm tại [architecture_and_pseudocode.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/.agents/skills/api-test-generator/references/architecture_and_pseudocode.md) và [generator.py](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/.agents/skills/api-test-generator/scripts/generator.py)).*
+
+### 8.3. Video Minh Chứng Thực Thi Agent Skill (Video Demonstration — G9.5 Create Level)
+* **Link YouTube Demo:** [https://www.youtube.com/watch?v=M33xqn3My3A](https://www.youtube.com/watch?v=M33xqn3My3A)
+* **Thời lượng:** ~3–5 phút (Tuân thủ yêu cầu Section 7 / G9.5)
+* **Nội dung video thực tế ghi nhận:**
+  1. **Giới thiệu:** Mã sinh viên `23120228` (Member M4) và 3 phân hệ API được phân công (FR-03: Forgot & Reset Password, FR-09: Apply Coupon, FR-19: Admin Users).
+  2. **Kiến trúc Skill:** Trình bày cấu trúc Agent Skill `.agents/skills/api-test-generator/` (`SKILL.md`), sơ đồ kiến trúc 5 tầng và cơ chế tự động tiêm header bắt buộc `X-Student-Id: 23120228` (Anti-AI-Cheat).
+  3. **Thực thi sinh test tự động:** Kích hoạt script generator sinh tự động toàn diện các kịch bản kiểm thử (Positive, Boundary, Negative, Security Payload) cho API `POST /api/coupons/apply`.
+  4. **Thực thi Postman & Newman:** Gửi request trên Postman (Postman Console ghi nhận rõ `X-Student-Id: "23120228"`), chạy tự động qua `.\run_tests.ps1` và mở báo cáo `report/newman_report.html` bóc trần bug thực tế `BUG-M4-04`.
+  5. **Tích hợp CI/CD & Quản lý lỗi:** Minh chứng 2 pipeline runs trên GitHub Actions (Pass/Fail) và 8 GitHub Issues đồng bộ.
 
 ---
 

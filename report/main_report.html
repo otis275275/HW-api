@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <title>EShop API Main Report - 23120228</title>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.6; padding: 40px; max-width: 1000px; margin: 0 auto; color: #24292e; }
   table { border-collapse: collapse; width: 100%; margin: 20px 0; }
   th, td { border: 1px solid #dfe2e5; padding: 8px 12px; text-align: left; }
-  th { background-color: #f6f8fa; }
+  th { background-color: #f6f8fa; font-weight: bold; }
   tr:nth-child(2n) { background-color: #f8f8f8; }
   code { background-color: #f6f8fa; padding: 2px 5px; border-radius: 3px; font-family: Consolas, monospace; font-size: 85%; }
   pre code { background-color: transparent; padding: 0; }
   pre { background-color: #f6f8fa; padding: 16px; border-radius: 6px; overflow: auto; border: 1px solid #e1e4e8; }
   blockquote { border-left: 4px solid #dfe2e5; color: #6a737d; padding: 0 1em; margin: 0; }
-  img { max-width: 100%; height: auto; }
+  img { max-width: 100%; height: auto; display: block; margin: 15px 0; border: 1px solid #e1e4e8; border-radius: 4px; }
+  h1, h2, h3, h4 { border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; }
   @media print {
     body { padding: 0; }
     @page { margin: 1.5cm; }
@@ -22,10 +22,492 @@
 </style>
 </head>
 <body>
-<div id="content"></div>
-<script>
-  const rawMd = '# BÁO CÁO TỔNG HỢP KIỂM THỬ API (MAIN REPORT) — HW06: API TESTING\n\n**Học phần:** Kiểm thử Phần mềm (Software Testing)  \n**Mã bài tập:** HW06 – API Testing (HW06-AI)  \n**Họ và tên:** Thành viên M4  \n**Mã số sinh viên (StudentID):** `23120228`  \n**Base URL hệ thống (SUT):** `http://localhost:3000`  \n**Header bắt buộc (Anti-Cheat):** `X-Student-Id: 23120228`  \n**Tên file nộp bài:** `23120228_HW06_AI_API_100.zip`\n\n---\n\n## MỤC LỤC\n1. [Tổng Quan Đề Tài & Phân Công Nhiệm Vụ](#1-tổng-quan-đề-tài--phân-công-nhiệm-vụ)\n2. [Chi Tiết Pipeline API 1 — Pool A: FR-03 (Quên & Đặt lại mật khẩu)](#2-chi-tiết-pipeline-api-1--pool-a-fr-03-quên--đặt-lại-mật-khẩu)\n3. [Chi Tiết Pipeline API 2 — Pool B: FR-09 (Áp dụng mã giảm giá Coupon)](#3-chi-tiết-pipeline-api-2--pool-b-fr-09-áp-dụng-mã-giảm-giá-coupon)\n4. [Chi Tiết Pipeline API 3 — Pool C: FR-19 (Quản trị người dùng Admin)](#4-chi-tiết-pipeline-api-3--pool-c-fr-19-quản-trị-người-dùng-admin)\n5. [Phân Tích Chuyên Sâu Các Test Cases AI Bỏ Sót (5 Key AI-Missed Cases)](#5-phân-tích-chuyên-sâu-các-test-cases-ai-bỏ-sót-5-key-ai-missed-cases)\n6. [Báo Cáo Lỗi Phần Mềm Thực Tế (Genuine Bug Reports)](#6-báo-cáo-lỗi-phần-mềm-thực-tế-genuine-bug-reports)\n7. [Tự Động Hóa Kiểm Thử Bằng Postman & Newman CLI](#7-tự-động-hóa-kiểm-thử-bằng-postman--newman-cli)\n8. [Thiết Kế Bộ Sinh Test AI (Agent Skill — Create Level G9.5)](#8-thiết-kế-bộ-sinh-test-ai-agent-skill--create-level-g95)\n9. [Báo Cáo Tích Hợp CI/CD (GitHub Actions)](#9-báo-cáo-tích-hợp-cicd-github-actions)\n10. [Bản Phê Bình AI & Tuyên Bố Kiểm Toán (AI Critique & Audit Declaration)](#10-bản-phê-bình-ai--tuyên-bố-kiểm-toán-ai-critique--audit-declaration)\n11. [Bảng Tự Đánh Giá Điểm Số (Self-Assessment Table)](#11-bảng-tự-đánh-giá-điểm-số-self-assessment-table)\n\n---\n\n## 1. Tổng Quan Đề Tài & Phân Công Nhiệm Vụ\n\nHệ thống kiểm thử (SUT) là **EShop** — nền tảng thương mại điện tử phục vụ thực hành kiểm thử phần mềm. Theo phân công nhóm, sinh viên là **Thành viên M4** phụ trách 3 API độc lập thuộc 3 phân hệ chức năng:\n\n| Phân hệ (Pool) | Mã chức năng | API Endpoints Phụ trách | Phạm vi & Trọng tâm kiểm thử |\n| :--- | :--- | :--- | :--- |\n| **Pool A** (Auth) | **FR-03** | `POST /api/forgot-password`<br>`POST /api/reset-password` | Quy trình cấp OTP, xác thực mật khẩu mạnh (FR-01), độ dài entropy OTP (SEC-07), bảo mật mật khẩu (SEC-01). |\n| **Pool B** (Cart/Order) | **FR-09** | `POST /api/apply-coupon` | Ma trận 5 điều kiện (C1 đến C5), lỗi giá trị biên `min_order_amount`, lỗi công thức chiết khấu phần trăm, xác thực token. |\n| **Pool C** (Admin) | **FR-19** | `GET /api/admin/users`<br>`DELETE /api/admin/users/:id` | Kiểm soát truy cập phân quyền RBAC (SEC-03, FR-12), ràng buộc chống Admin tự xóa chính mình, an toàn dữ liệu. |\n\n---\n\n## 2. Chi Tiết Pipeline API 1 — Pool A: FR-03 (Quên & Đặt lại mật khẩu)\n\n### 2.1. Sinh Test Case Bằng AI (36 Test Cases)\nHệ thống AI đã sinh 36 test cases bao phủ đủ 4 khía cạnh:\n* **Domain Partitioning (DP):** Email hợp lệ, không tồn tại, rỗng, thiếu `@`, thiếu domain, khoảng trắng, quá dài, SQLi, XSS, Uppercase. Tham số OTP: hợp lệ, sai, rỗng, thiếu, ký tự chữ, quá ngắn, quá dài, SQLi. Tham số mật khẩu mới: độ dài < 8 ký tự, thiếu chữ hoa, chữ thường, số, ký tự đặc biệt, rỗng, whitespace.\n* **State Transition (ST):** Chuỗi 3 bước Forgot $\\rightarrow$ Reset $\\rightarrow$ Login mật khẩu mới; cơ chế vô hiệu hóa mã OTP sau 1 lần dùng (One-time token); đăng nhập bằng mật khẩu cũ bị từ chối; yêu cầu OTP 2 lần liên tiếp.\n* **Security (SEC):** Kiểm tra entropy độ dài OTP $\\ge 6$ số (SEC-07); tấn công chiếm quyền chéo tài khoản; kiểm tra không rò rỉ mật khẩu plaintext (SEC-01).\n* **Schema Validation:** Xác thực JSON Schema cho `POST /api/forgot-password` và `POST /api/reset-password`.\n\n### 2.2. Bảng Human Audit Từng Test Case Của FR-03 (36/36 Evaluated)\n*(Xem chi tiết phân tích từng dòng tại [test_cases_fr03.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/test_cases_fr03.md))*:\n* **Dán nhãn INVALID cho nhóm TC-FR03-21 đến TC-FR03-27:** AI ban đầu bị **Pass ảo (False Positive)** khi đặt test mật khẩu yếu sau TC-12 (dùng lại token cũ đã bị hủy khiến server trả về 400 "Invalid token" làm tưởng nhầm là validator mật khẩu hoạt động).\n  * *Hành động hiệu chỉnh của sinh viên:* Viết Pre-request Script tự động gửi `POST /api/forgot-password` để lấy mã OTP tươi mới (`freshResetToken`) trước khi test mật khẩu yếu $\\rightarrow$ SUT thực tế trả về 200 OK (chấp nhận cả pass `Pass1!`, thiếu ký tự đặc biệt) $\\rightarrow$ Khẳng định và bắt chuẩn xác **BUG-M4-02**!\n* **Dán nhãn INCOMPLETE cho TC-03, TC-04, TC-20, TC-30, TC-31:** Siết chặt assertion 400 cho email rỗng, sửa thứ tự State Transition đăng nhập pass cũ / pass mới, và tiêm token mới.\n\n---\n\n## 3. Chi Tiết Pipeline API 2 — Pool B: FR-09 (Áp dụng mã giảm giá Coupon)\n\n### 3.1. Sinh Test Case Bằng AI (35 Test Cases)\nBao phủ toàn diện 5 điều kiện áp dụng mã giảm giá:\n* **Điều kiện C1 (Tồn tại & Active):** Mã `SAVE10`, mã cố định `BIGBUY`, mã không tồn tại, mã `is_active = 0`, mã rỗng, thiếu mã, SQLi trong mã, mã chữ thường.\n* **Điều kiện C2 (Hạn sử dụng):** Mã hết hạn `EXPIRED` (đơn 200k), biên vừa hết hạn, mã còn hạn dài (2099).\n* **Điều kiện C3 (Ngưỡng đơn tối thiểu):** Đơn dưới mức ($299.999 < 300.000$), đơn bằng chính xác mức ($300.000 == 300.000$), đơn trên mức ($300.001$), đơn 0 đồng, đơn âm, thiếu `total_amount`, dữ liệu chuỗi, số thực.\n* **Điều kiện C4 (Xác thực đăng nhập):** Không token, token giả, giả mạo `user_id` (IDOR).\n* **Điều kiện C5 (Hạn mức sử dụng):** Dùng lần 1, dùng lần 2 vượt hạn mức `max_uses = 1`, mã `VIP100` dùng lần 1, 2 và lần 3 vượt hạn mức.\n* **Tính toán & Schema:** Kiểm tra toán học giảm giá phần trăm vs cố định, làm tròn tiền, kiểm định JSON contract.\n\n### 3.2. Bảng Human Audit Từng Test Case Của FR-09 (35/35 Evaluated)\n*(Xem chi tiết phân tích từng dòng tại [test_cases_fr09.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/test_cases_fr09.md))*:\n* **Dán nhãn INVALID / CRITICAL cho TC-FR09-01:** AI chỉ assert 200 OK mà bỏ sót kiểm tra tiền. Code SUT viết `(1 - discount_value)` sinh ra số tiền âm.\n  * *Hiệu chỉnh:* Bổ sung assertion kiểm tra `discount_amount == 50000`, `final_amount == 450000` $\\rightarrow$ Bắt **BUG-M4-04**.\n* **Dán nhãn INVALID / CRITICAL cho TC-FR09-13:** AI giả định server đúng, nhưng code SUT dùng toán tử so sánh ngặt `>`.\n  * *Hiệu chỉnh:* Đặt assertion 200 OK tại mốc đúng 300.000 ₫ $\\rightarrow$ Bắt **BUG-M4-03** (SUT trả về 400 từ chối sai luật).\n* **Dán nhãn INVALID / CRITICAL cho TC-FR09-20:** AI bỏ qua việc kiểm tra C4 (xác thực token).\n  * *Hiệu chỉnh:* Bỏ header token và assert 401 Unauthorized $\\rightarrow$ Bắt **BUG-M4-05** (SUT không có middleware auth).\n* **Dán nhãn INCOMPLETE cho TC-FR09-24, 26, 27:** Bổ sung Pre-request Script tự động gọi `/api/coupon-usage` để ghi nhận lượt dùng trước đó vào CSDL SQLite.\n\n---\n\n## 4. Chi Tiết Pipeline API 3 — Pool C: FR-19 (Quản trị người dùng Admin)\n\n### 4.1. Sinh Test Case Bằng AI (35 Test Cases)\nBao phủ các khía cạnh an ninh và quản trị:\n* **Kiểm soát truy cập (RBAC - SEC-03):** Admin gọi hợp lệ (200), Regular User gọi `GET /api/admin/users` (403), Anonymous gọi (401), Token giả mạo/hết hạn.\n* **Xóa người dùng (DELETE):** Admin xóa user 2 (200), Regular user xóa user 2 (403), Regular user xóa Admin 1 (403), Anonymous xóa (401), Admin tự xóa chính mình (400/403).\n* **Domain Partitioning trên `:id`:** ID không tồn tại (9999), ID = 0, ID âm, ID chuỗi chữ, ký tự đặc biệt, SQLi, overflow ID.\n* **State Transition & Schema:** User bị xóa biến mất khỏi danh sách, không thể đăng nhập lại, tính lũy thừa (xóa lần 2), bảo mật không lộ mật khẩu/reset_token, schema array và delete response.\n\n### 4.2. Bảng Human Audit Từng Test Case Của FR-19 (35/35 Evaluated)\n*(Xem chi tiết phân tích từng dòng tại [test_cases_fr19.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/test_cases_fr19.md))*:\n* **Dán nhãn INVALID / CRITICAL cho TC-FR19-02, 09, 10:** AI ban đầu nhầm lẫn endpoint và không nhận ra middleware không kiểm tra role.\n  * *Hiệu chỉnh:* Phân tách rõ kịch bản User thường xóa User 2 và User thường xóa Admin 1, mang `userToken` thật và assert 403 Forbidden $\\rightarrow$ Bắt lỗi Broken Access Control nghiêm trọng (**BUG-M4-06**).\n* **Dán nhãn INVALID / CRITICAL cho TC-FR19-12:** Đề bài cấm Admin tự xóa chính mình.\n  * *Hiệu chỉnh:* Gửi lệnh Admin xóa ID của chính mình và assert 400/403 $\\rightarrow$ Bắt lỗi SUT xóa luôn Admin đang login (**BUG-M4-07**).\n* **Dán nhãn INVALID / CRITICAL cho TC-FR19-13 & 22:** Xóa ID không tồn tại hoặc xóa lần 2.\n  * *Hiệu chỉnh:* Đặt assertion 404 Not Found $\\rightarrow$ Bắt lỗi SUT luôn trả về 200 OK giả mạo (**BUG-M4-08**).\n\n---\n\n## 5. Phân Tích Chuyên Sâu Các Test Cases AI Bỏ Sót (5 Key AI-Missed Cases)\n\nĐể đạt điểm tối đa ở bước **Extend**, sinh viên đã thiết kế và bổ sung các ca kiểm thử nâng cao mà AI bỏ sót, đặc biệt xoay quanh khía cạnh **Bảo mật (Security)** và **Chuyển trạng thái (State Transitions)**. Bảng dưới đây phân tích nguyên nhân gốc rễ theo đúng 3 tiêu chí đề bài yêu cầu: *Prompt quality*, *Model limitations*, và *Characteristics of the API*.\n\n| STT | Test Case ID & Feature | Loại kiểm thử | Kịch bản thực thi (Scenario) | Kết quả mong đợi (Expected) | Lý do AI bỏ sót (Root Cause Analysis) |\n| :---: | :--- | :--- | :--- | :--- | :--- |\n| **1** | **TC-FR03-EXT01**<br>*(FR-03: Reset Password)* | State Transition<br>*(Time-based)* | Gọi `POST /api/forgot-password` lấy `resetToken`, cố tình chờ vượt quá thời hạn cho phép (ví dụ > 5 phút) rồi mới gửi `POST /api/reset-password`. | 400 Bad Request<br>*(Mã OTP đã hết hạn).* | **Characteristics of the API & Model limitations:** Cả tài liệu đặc tả API lẫn bảng CSDL `users` trong mã nguồn SUT đều không thiết kế cột mốc thời gian (`token_expired_at`). Đồng thời, AI bị giới hạn bởi việc chỉ sinh test tĩnh theo cặp Request/Response mà bỏ qua chiều kích chuyển đổi trạng thái phụ thuộc vào trục thời gian thực (Time-based State). |\n| **2** | **TC-FR03-EXT02**<br>*(FR-03: Reset Password)* | Security<br>*(Brute-force / Rate Limit)* | Gửi liên tiếp 10 request đoán mã OTP sai ngẫu nhiên tới endpoint `POST /api/reset-password`. | 429 Too Many Requests hoặc vô hiệu hóa OTP sau 5 lần đoán sai. | **Prompt quality & Model limitations:** Do prompt kiểm thử API thông thường chỉ yêu cầu kiểm tra validation chức năng (status 200/400), AI mặc định không tự suy luận kịch bản tấn công vét cạn (Brute-force attack) trên các mã xác thực ngắn, trừ khi người dùng đưa rõ từ khóa an ninh mạng hoặc chính sách Rate Limiting vào prompt. |\n| **3** | **TC-FR09-EXT02**<br>*(FR-09: Apply Coupon)* | State Transition<br>*(Cross-endpoint Lifecycle)* | User dùng mã `SAVE10` (giới hạn 1 lần) đặt hàng thành công $\\rightarrow$ gọi `PUT /api/orders/:id/cancel` để hủy đơn $\\rightarrow$ sau đó quay lại giỏ hàng gọi `POST /api/apply-coupon` với mã `SAVE10`. | 200 OK<br>*(Khôi phục lại quyền sử dụng mã giảm giá cho user).* | **Prompt quality & Characteristics of the API:** Prompt chỉ cung cấp tài liệu API của riêng endpoint `/api/apply-coupon`, khiến AI sinh test trong phạm vi cô lập (siloed testing). AI không có bức tranh toàn cảnh về chu trình sống của đơn hàng (Order Lifecycle) ở endpoint khác để nhận ra cần hoàn lại quota mã giảm giá khi đơn hàng bị hủy. |\n| **4** | **TC-FR09-EXT01**<br>*(FR-09: Apply Coupon)* | Security & State Transition<br>*(Race Condition)* | Gửi đồng thời 2 request sử dụng mã `SAVE10` (giới hạn 1 lần) trong cùng một mili-giây qua 2 luồng song song. | Chỉ có duy nhất 1 request được chấp nhận, request thứ 2 bị từ chối 400 Bad Request. | **Model limitations:** Các mô hình ngôn ngữ lớn (LLM) có tư duy thiết kế kịch bản kiểm thử dạng tuần tự (Sequential testing). Chúng không tự động mô phỏng các tình huống tranh chấp tài nguyên đồng thời (Concurrency / Race Condition) nhằm khai thác khoảng trống khi CSDL chưa kịp ghi bản ghi vào bảng `coupon_usage` (lỗi thiếu Database Lock / Mutex). |\n| **5** | **TC-FR19-EXT02**<br>*(FR-19: Admin Users)* | Security & State Integrity<br>*(System Invariant)* | Trong kịch bản hệ thống chỉ còn duy nhất 1 tài khoản Admin hoạt động, thực hiện gửi lệnh `DELETE /api/admin/users/:id` lên tài khoản Admin cuối cùng đó. | 400 Bad Request<br>*(Hệ thống phải duy trì tối thiểu 1 Quản trị viên).* | **Characteristics of the API:** Đặc tả FR-19 chỉ đưa ra quy tắc bảo vệ cục bộ *"không được tự xóa chính mình"*, nhưng không mô tả bất biến toàn hệ thống (System-wide Invariant). Do đó, AI không tự suy luận ra lỗ hổng quản trị: nếu có 2 admin và Admin A xóa Admin B, sau đó hệ thống mất luôn cơ chế bảo vệ nếu chỉ còn 1 admin hoặc bị xóa sạch quyền quản trị. |\n\n---\n\n## 6. Báo Cáo Lỗi Phần Mềm Thực Tế & GitHub Issues (Genuine Bug Reports)\n\nToàn bộ 8 lỗi dưới đây đã được kiểm chứng thực tế trong mã nguồn `backend/server.js`, chụp ảnh bằng chứng và tạo đầy đủ **GitHub Issues** trên repository chính thức [otis275275/HW-api](https://github.com/otis275275/HW-api/issues):\n\n| Bug ID | Mức độ | Endpoint / Thành phần | Vi phạm yêu cầu | Tóm tắt lỗi | GitHub Issue Link |\n| :--- | :--- | :--- | :--- | :--- | :---: |\n| **BUG-M4-01** | High | `POST /api/forgot-password` | **SEC-07, FR-03** | Mã OTP đặt lại mật khẩu chỉ có 4 chữ số thay vì tối thiểu 6 chữ số. | [Issue #1](https://github.com/otis275275/HW-api/issues/1) |\n| **BUG-M4-02** | Critical | `POST /api/reset-password` | **SEC-01, FR-01** | Mật khẩu lưu dạng plaintext vào CSDL và không kiểm tra độ phức tạp mật khẩu mới. | [Issue #2](https://github.com/otis275275/HW-api/issues/2) |\n| **BUG-M4-03** | High | `POST /api/apply-coupon` | **FR-09 (Điều kiện C3)** | Lỗi biên so sánh ngặt `>` thay vì `>=` tại ngưỡng đơn hàng tối thiểu `min_order_amount`. | [Issue #3](https://github.com/otis275275/HW-api/issues/3) |\n| **BUG-M4-04** | Critical | `POST /api/apply-coupon` | **FR-09 (Logic tính tiền)** | Lỗi công thức tính giảm giá phần trăm `total * (1 - discount_value)` gây ra số tiền âm bất thường. | [Issue #4](https://github.com/otis275275/HW-api/issues/4) |\n| **BUG-M4-05** | Medium | `POST /api/apply-coupon` | **FR-09 (Điều kiện C4)** | Thiếu middleware xác thực JWT `authenticateToken`, cho phép khách chưa đăng nhập áp dụng mã. | [Issue #5](https://github.com/otis275275/HW-api/issues/5) |\n| **BUG-M4-06** | Critical | `GET /api/admin/users`<br>`DELETE /api/admin/users/:id` | **SEC-03, FR-12** | Lỗ hổng Broken Access Control (RBAC): Middleware không kiểm tra `role === \'admin\'`, tài khoản thường có thể xem và xóa user khác. | [Issue #6](https://github.com/otis275275/HW-api/issues/6) |\n| **BUG-M4-07** | High | `DELETE /api/admin/users/:id` | **FR-19 (Ràng buộc Admin)** | Admin có thể tự xóa chính tài khoản của mình đang đăng nhập. | [Issue #7](https://github.com/otis275275/HW-api/issues/7) |\n| **BUG-M4-08** | Low | `DELETE /api/admin/users/:id` | **API Contract / REST** | Xóa ID không tồn tại nhưng hệ thống vẫn luôn trả về HTTP 200 `User deleted` (thiếu kiểm tra số dòng bị ảnh hưởng). | [Issue #8](https://github.com/otis275275/HW-api/issues/8) |\n\n*(Chi tiết các bước tái hiện cURL, ảnh chụp bằng chứng màn hình và phân tích nguyên nhân gốc rễ được lưu tại [report/bug_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/bug_report.md) và thư mục ảnh [report/screenshots/](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/screenshots/)).*\n\n---\n\n## 7. Tự Động Hóa Kiểm Thử Bằng Postman & Newman CLI\n\n### 7.1. Bằng Chứng Tiêm Header `X-Student-Id` (Anti-AI-Cheat Requirement - Mục 11)\nTại cấp độ gốc của Postman Collection ([m4_eshop_collection.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/m4_eshop_collection.json)), Pre-request Script tự động gán header định danh cho mọi request:\n```javascript\nconst studentId = pm.environment.get(\'studentId\') || \'23120228\';\npm.request.headers.upsert({ key: \'X-Student-Id\', value: studentId });\nconsole.log(\'[M4 Automation] Injected X-Student-Id:\', studentId);\n```\n**Ảnh chụp màn hình Postman Console thực tế chứng minh Header `X-Student-Id: 23120228` đã được tiêm thành công khi gọi `POST http://localhost:3000/api/login`:**\n\n![Postman Console X-Student-Id Evidence](screenshots/postman_console_student_id.jpg)\n\n### 7.2. Lệnh Chạy Tự Động Một Chạm\nSinh viên cung cấp sẵn script [run_tests.ps1](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.ps1) và [run_tests.bat](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.bat). Khi thực thi:\n```powershell\npowershell -ExecutionPolicy Bypass -File .\\run_tests.ps1\n```\nHệ thống tự động:\n1. Reset & Seed CSDL sạch: `node .\\backend\\database.js`\n2. Bật server Backend ngầm tại `http://localhost:3000`\n3. Chạy Newman CLI với cấu hình reporters: `-r cli -r htmlextra -r json`\n4. Xuất file báo cáo HTML tại [report/newman_report.html](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/newman_report.html)\n5. Xuất phân tích chi tiết lỗi tại [report/test_execution_detailed.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/test_execution_detailed.md)\n\n### 7.3. Kết Quả Nghiệm Thu Thực Tế (Execution Metrics)\n* **Tổng số requests thực thi:** 121\n* **Tổng số assertions đánh giá:** 128\n* **Assertions Passed:** 96 (75%)\n* **Assertions Failed:** 32 (25% — Bắt trọn vẹn toàn bộ 8 lỗi SUT)\n* **Lỗi cú pháp Script (SyntaxError):** 0\n* **Fail oan do thiếu Token:** 0\n\n### 7.4. Danh Sách Các Tính Năng Postman Đã Vận Dụng (Postman Features Used)\nTheo yêu cầu kỹ thuật của bài tập (Mục 6), sinh viên đã vận dụng tối đa các tính năng cốt lõi và nâng cao của Postman:\n\n1. **Workspaces:**\n   - Thiết lập Workspace `EShop-M4-Testing` để quản lý độc lập các tài nguyên kiểm thử của phân hệ M4, không bị lẫn lộn biến môi trường với các thành viên khác.\n2. **Collections & Folders Hierarchy:**\n   - Cấu trúc phân cấp logic rõ ràng: Thư mục tiền xử lý (`0. Authentication & Setup`), Thư mục Pool A (`FR-03`), Thư mục Pool B (`FR-09`), và Thư mục Pool C (`FR-19`).\n3. **Environments & Variables Scopes:**\n   - Sử dụng tệp môi trường [postman/eshop_environment.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/eshop_environment.json) quản lý các biến `baseUrl`, `studentId`, `adminToken`, `userToken`, `activeResetToken`.\n   - Vận dụng linh hoạt các cấp độ biến: *Global*, *Collection Variables*, *Environment Variables*, và *Dynamic Variables* (`{{$timestamp}}`, `{{$randomEmail}}`).\n4. **Pre-request Scripts & Dynamic Request Chaining:**\n   - **Collection-level Pre-request:** Tự động gán Header bắt buộc `X-Student-Id: 23120228` cho 100% request.\n   - **Dynamic Token Chaining (`pm.sendRequest`):** Trong các test case kiểm tra độ phức tạp mật khẩu, Pre-request script tự động gửi ngầm một HTTP request tới `/api/forgot-password` để lấy token OTP mới nhằm triệt tiêu hoàn toàn lỗi Pass ảo.\n5. **Tests Scripts & Chai.js Assertions:**\n   - Kiểm tra mã trạng thái HTTP, thời gian phản hồi, cấu trúc JSON Schema và logic nghiệp vụ. Toàn bộ mã assertion được đóng gói trong hàm IIFE `(function() { ... })();` để cô lập biến, loại bỏ triệt để lỗi va chạm biến toàn cục trong môi trường Newman CLI.\n6. **Data-Driven Testing (DDT - Collection Runner with Data File):**\n   - Xây dựng tệp dữ liệu kiểm thử độc lập [postman/data_driven_coupons.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/data_driven_coupons.json) chứa các bộ dữ liệu kiểm thử mã giảm giá (hợp lệ, hết hạn, dưới ngưỡng, mã rác,...).\n   - Thiết lập bộ Collection [postman/m4_ddt_collection.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/m4_ddt_collection.json) sử dụng `pm.iterationData.get(...)` để thực thi kiểm thử hàng loạt dữ liệu đầu vào.\n7. **Mock Servers:**\n   - Thiết kế đặc tả cấu hình Mock Server tại [postman/mock_server_spec.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/mock_server_spec.json) cung cấp các mock response chuẩn cho các endpoint M4, hỗ trợ phát triển Frontend/Mobile độc lập khi Backend chưa khả dụng.\n8. **Monitors & Automated Newman Runners:**\n   - Cung cấp script tự động hóa [run_tests.ps1](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.ps1) và [run_tests.bat](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.bat) tích hợp chạy kiểm thử tự động, trích xuất báo cáo HTML và tích hợp vào quy trình CI/CD GitHub Actions (`ci-cd/api-tests.yml`).\n\n---\n\n## 8. Thiết Kế Bộ Sinh Test AI (Agent Skill — Create Level G9.5)\n\nSinh viên tự thiết kế kiến trúc bộ sinh test tự động dựa trên đặc tả API, thỏa mãn tiêu chí cấp độ **Create (G9.5)**:\n\n### 8.1. Sơ Đồ Kiến Trúc Hệ Thống (Mermaid Diagram)\n```mermaid\nflowchart TD\n    subgraph InputLayer ["1. Input Specification Layer"]\n        In1["API Specification (FR-03, FR-09, FR-19)"]\n        In2["Security Constraints (SEC-01, SEC-03, SEC-07)"]\n        In3["Student Identity (X-Student-Id: 23120228)"]\n    end\n\n    subgraph CoreEngine ["2. AI Test Generator Core Engine"]\n        E1["Endpoint Decomposer & Parser"]\n        E2["Domain Partitioning & Boundary Engine"]\n        E3["State Transition Graph Generator"]\n        E4["Security Vulnerability Mutation Engine"]\n        E5["JSON Schema Contract Synthesizer"]\n    end\n\n    subgraph AuditFilter ["3. Human-in-the-Loop Audit & Extension"]\n        A1["Classification Gate (VALID / INVALID / INCOMPLETE)"]\n        A2["Token Refresh Injector (Anti-False-Positive)"]\n        A3["Extension Engine: Inject +5 Missed Test Cases"]\n    end\n\n    subgraph ExecutionLayer ["4. Automated Execution & Export"]\n        Ex1["Postman Collection v2.1 Exporter"]\n        Ex2["Newman CLI & HTML-Extra Reporter"]\n        Ex3["Failure Root-Cause Mapper"]\n    end\n\n    subgraph OutputEvidence ["5. Deliverables & Audit Evidence"]\n        Out1["HTML Newman Execution Report"]\n        Out2["Detailed Failure Analysis Markdown"]\n        Out3["Bug Reports Matrix"]\n        Out4["AI Audit Log (report/ai_audit.md)"]\n    end\n\n    InputLayer --> CoreEngine\n    CoreEngine --> AuditFilter\n    AuditFilter --> ExecutionLayer\n    ExecutionLayer --> OutputEvidence\n```\n\n### 8.2. Thuật Toán Mã Giả (Core Generator Pseudocode)\n*(Chi tiết mã giả thuật toán và script nguồn nằm tại [architecture_and_pseudocode.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/.agents/skills/api-test-generator/references/architecture_and_pseudocode.md) và [generator.py](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/.agents/skills/api-test-generator/scripts/generator.py)).*\n\n---\n\n## 9. Báo Cáo Tích Hợp CI/CD (GitHub Actions)\n\nSinh viên đã thiết lập quy trình tự động hóa kiểm thử tích hợp liên tục (CI/CD) thông qua GitHub Actions tại đường dẫn [`.github/workflows/api-tests.yml`](https://github.com/otis275275/HW-api/blob/main/.github/workflows/api-tests.yml):\n* **Cấu hình Pipeline:** Checkout code $\\rightarrow$ Setup Node.js 20 $\\rightarrow$ `npm rebuild sqlite3` $\\rightarrow$ Cài đặt Newman + HTMLExtra $\\rightarrow$ Seed DB (`node backend/database.js`) $\\rightarrow$ Start Backend server ngầm $\\rightarrow$ Chạy Newman CLI $\\rightarrow$ Upload Artifact `newman_report.html`.\n* **Minh chứng 2 Sample Commits & Runs trên GitHub Actions:**\n  1. **Run 1 — All Passing (✅):** Commit [`65c7cbc`](https://github.com/otis275275/HW-api/commit/65c7cbca1f959a7d4de003a269a2439e14a3045c) | [Actions Run #10 (Success)](https://github.com/otis275275/HW-api/actions/runs/46102321115) — 5/5 assertions passed, exit code `0`.\n  2. **Run 2 — One Failing Test (❌):** Commit [`aa2914b`](https://github.com/otis275275/HW-api/commit/aa2914b54349aad405b53d5f6aa28e6ce03bd145) | [Actions Run #11 (Failure)](https://github.com/otis275275/HW-api/actions/runs/46102440398) — Bắt lỗi `BUG-M4-04` (`discount_amount: -4500000`), exit code `1`.\n\n*(Chi tiết cấu hình YAML và 2 ảnh chụp màn hình thật của GitHub Actions xem tại [report/ci_cd_report.md](report/ci_cd_report.md)).*\n\n---\n\n## 10. Bản Phê Bình AI & Tuyên Bố Kiểm Toán (AI Critique & Audit Declaration)\n\n### 10.1. Bản Phê Bình AI (200–300 từ — Mục 10)\n*(Xem nguyên văn tại [report/ai_critique.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/ai_critique.md))*:  \nTrong quá trình thực hiện bài tập, AI thể hiện năng lực vượt trội trong việc phân rã tham số và thiết lập bộ khung kiểm thử. Tuy nhiên, AI bộc lộ các khiếm khuyết mang tính hệ thống: (1) **Thiên vị Happy-Path** dẫn đến việc tin tưởng mù quáng vào tài liệu mà không đối chiếu logic code thực tế, bỏ qua lỗi toán học số âm của coupon và lỗi so sánh ngặt `>`; (2) **Lỗ hổng phạm vi biến trong sandbox**, lạm dụng biến toàn cục `data` làm crash test script; (3) **Tư duy tuần tự**, hoàn toàn bỏ qua các kịch bản bất đồng bộ (Race Condition) và các ràng buộc thời gian (OTP expiration). Bài học rút ra là nguyên tắc **"Human-in-the-Loop & Zero-Trust Verification"**: kỹ sư con người bắt buộc phải kiểm toán, thiết lập kịch bản cách ly biến và điều hướng các kiểm thử an ninh chuyên sâu.\n\n### 10.2. Tuyên Bố Kiểm Toán AI (Audit Declaration — Mục 9)\nNhật ký chi tiết quá trình tương tác giữa sinh viên và AI gồm **14 lượt tương tác minh bạch (Interactions #1 đến #14)** được lưu trữ toàn vẹn tại [report/ai_audit.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/ai_audit.md).\n\n---\n\n## 11. Bảng Tự Đánh Giá Điểm Số (Self-Assessment Table)\n\n| STT | Tiêu chí đánh giá theo Mục 15 | Điểm tối đa | Điểm tự chấm | Minh chứng & Cơ sở đánh giá |\n| :---: | :--- | :---: | :---: | :--- |\n| **1** | **API 1 (FR-03):** Toàn bộ pipeline (Generate $\\ge 35$ + Audit + Extend + Execute Newman + Bug report) | **30** | **30** | Đầy đủ 36 AI test cases + Audit từng dòng + 5 test cases mở rộng + Phát hiện BUG-M4-01 (SEC-07) và BUG-M4-02 (SEC-01). |\n| **2** | **API 2 (FR-09):** Toàn bộ pipeline (cùng tiêu chí) | **30** | **30** | Đầy đủ 35 AI test cases (C1–C5) + Audit từng dòng + 5 test cases mở rộng + Phát hiện BUG-M4-03 (Biên >), BUG-M4-04 (Toán âm), BUG-M4-05 (Auth). |\n| **3** | **API 3 (FR-19):** Toàn bộ pipeline (cùng tiêu chí) | **30** | **30** | Đầy đủ 35 AI test cases + Audit từng dòng + 5 test cases mở rộng + Phát hiện BUG-M4-06 (BAC), BUG-M4-07 (Tự xóa), BUG-M4-08 (REST ID rác). |\n| **4** | **Agent Skills (AI-Driven Test Generator):** Thiết kế bộ sinh test tự động (G9.5 Create) | **10** | **10** | Sơ đồ kiến trúc Mermaid tự vẽ, thuật toán mã giả, script generator tự động tiêm header `X-Student-Id: 23120228`. |\n| **TỔNG** | **Tổng điểm đồ án HW06** | **100** | **100** | **Tên file nộp: `23120228_HW06_AI_API_100.zip`** |\n';
-  document.getElementById('content').innerHTML = marked.parse(rawMd);
-</script>
+<h1>BÁO CÁO TỔNG HỢP KIỂM THỬ API (MAIN REPORT) — HW06: API TESTING</h1>
+<p><strong>Học phần:</strong> Kiểm thử Phần mềm (Software Testing)<br />
+<strong>Mã bài tập:</strong> HW06 – API Testing (HW06-AI)<br />
+<strong>Họ và tên:</strong> Thành viên M4<br />
+<strong>Mã số sinh viên (StudentID):</strong> <code>23120228</code><br />
+<strong>Base URL hệ thống (SUT):</strong> <code>http://localhost:3000</code><br />
+<strong>Header bắt buộc (Anti-Cheat):</strong> <code>X-Student-Id: 23120228</code><br />
+<strong>Tên file nộp bài:</strong> <code>23120228_HW06_AI_API_100.zip</code></p>
+<hr />
+<h2>MỤC LỤC</h2>
+<ol>
+<li><a href="#1-t%E1%BB%95ng-quan-%C4%91%E1%BB%81-t%C3%A0i--ph%C3%A2n-c%C3%B4ng-nhi%E1%BB%87m-v%E1%BB%A5">Tổng Quan Đề Tài &amp; Phân Công Nhiệm Vụ</a></li>
+<li><a href="#2-chi-ti%E1%BA%BFt-pipeline-api-1--pool-a-fr-03-qu%C3%AAn--%C4%91%E1%BA%B7t-l%E1%BA%A1i-m%E1%BA%ADt-kh%E1%BA%A9u">Chi Tiết Pipeline API 1 — Pool A: FR-03 (Quên &amp; Đặt lại mật khẩu)</a></li>
+<li><a href="#3-chi-ti%E1%BA%BFt-pipeline-api-2--pool-b-fr-09-%C3%A1p-d%E1%BB%A5ng-m%C3%A3-gi%E1%BA%A3m-gi%C3%A1-coupon">Chi Tiết Pipeline API 2 — Pool B: FR-09 (Áp dụng mã giảm giá Coupon)</a></li>
+<li><a href="#4-chi-ti%E1%BA%BFt-pipeline-api-3--pool-c-fr-19-qu%E1%BA%A3n-tr%E1%BB%8B-ng%C6%B0%E1%BB%9Di-d%C3%B9ng-admin">Chi Tiết Pipeline API 3 — Pool C: FR-19 (Quản trị người dùng Admin)</a></li>
+<li><a href="#5-ph%C3%A2n-t%C3%ADch-chuy%C3%AAn-s%C3%A2u-c%C3%A1c-test-cases-ai-b%E1%BB%8F-s%C3%B3t-5-key-ai-missed-cases">Phân Tích Chuyên Sâu Các Test Cases AI Bỏ Sót (5 Key AI-Missed Cases)</a></li>
+<li><a href="#6-b%C3%A1o-c%C3%A1o-l%E1%BB%97i-ph%E1%BA%A7n-m%E1%BB%81m-th%E1%BB%B1c-t%E1%BA%BF-genuine-bug-reports">Báo Cáo Lỗi Phần Mềm Thực Tế (Genuine Bug Reports)</a></li>
+<li><a href="#7-t%E1%BB%B1-%C4%91%E1%BB%99ng-h%C3%B3a-ki%E1%BB%83m-th%E1%BB%AD-b%E1%BA%B1ng-postman--newman-cli">Tự Động Hóa Kiểm Thử Bằng Postman &amp; Newman CLI</a></li>
+<li><a href="#8-thi%E1%BA%BFt-k%E1%BA%BF-b%E1%BB%99-sinh-test-ai-agent-skill--create-level-g95">Thiết Kế Bộ Sinh Test AI (Agent Skill — Create Level G9.5)</a></li>
+<li><a href="#9-b%C3%A1o-c%C3%A1o-t%C3%ADch-h%E1%BB%A3p-cicd-github-actions">Báo Cáo Tích Hợp CI/CD (GitHub Actions)</a></li>
+<li><a href="#10-b%E1%BA%A3n-ph%C3%AA-b%C3%ACnh-ai--tuy%C3%AAn-b%E1%BB%91-ki%E1%BB%83m-to%C3%A1n-ai-critique--audit-declaration">Bản Phê Bình AI &amp; Tuyên Bố Kiểm Toán (AI Critique &amp; Audit Declaration)</a></li>
+<li><a href="#11-b%E1%BA%A3ng-t%E1%BB%B1-%C4%91%C3%A1nh-gi%C3%A1-%C4%91i%E1%BB%83m-s%E1%BB%91-self-assessment-table">Bảng Tự Đánh Giá Điểm Số (Self-Assessment Table)</a></li>
+</ol>
+<hr />
+<h2>1. Tổng Quan Đề Tài &amp; Phân Công Nhiệm Vụ</h2>
+<p>Hệ thống kiểm thử (SUT) là <strong>EShop</strong> — nền tảng thương mại điện tử phục vụ thực hành kiểm thử phần mềm. Theo phân công nhóm, sinh viên là <strong>Thành viên M4</strong> phụ trách 3 API độc lập thuộc 3 phân hệ chức năng:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Phân hệ (Pool)</th>
+<th style="text-align:left">Mã chức năng</th>
+<th style="text-align:left">API Endpoints Phụ trách</th>
+<th style="text-align:left">Phạm vi &amp; Trọng tâm kiểm thử</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Pool A</strong> (Auth)</td>
+<td style="text-align:left"><strong>FR-03</strong></td>
+<td style="text-align:left"><code>POST /api/forgot-password</code><br><code>POST /api/reset-password</code></td>
+<td style="text-align:left">Quy trình cấp OTP, xác thực mật khẩu mạnh (FR-01), độ dài entropy OTP (SEC-07), bảo mật mật khẩu (SEC-01).</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Pool B</strong> (Cart/Order)</td>
+<td style="text-align:left"><strong>FR-09</strong></td>
+<td style="text-align:left"><code>POST /api/apply-coupon</code></td>
+<td style="text-align:left">Ma trận 5 điều kiện (C1 đến C5), lỗi giá trị biên <code>min_order_amount</code>, lỗi công thức chiết khấu phần trăm, xác thực token.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Pool C</strong> (Admin)</td>
+<td style="text-align:left"><strong>FR-19</strong></td>
+<td style="text-align:left"><code>GET /api/admin/users</code><br><code>DELETE /api/admin/users/:id</code></td>
+<td style="text-align:left">Kiểm soát truy cập phân quyền RBAC (SEC-03, FR-12), ràng buộc chống Admin tự xóa chính mình, an toàn dữ liệu.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>2. Chi Tiết Pipeline API 1 — Pool A: FR-03 (Quên &amp; Đặt lại mật khẩu)</h2>
+<h3>2.1. Sinh Test Case Bằng AI (36 Test Cases)</h3>
+<p>Hệ thống AI đã sinh 36 test cases bao phủ đủ 4 khía cạnh:</p>
+<ul>
+<li><strong>Domain Partitioning (DP):</strong> Email hợp lệ, không tồn tại, rỗng, thiếu <code>@</code>, thiếu domain, khoảng trắng, quá dài, SQLi, XSS, Uppercase. Tham số OTP: hợp lệ, sai, rỗng, thiếu, ký tự chữ, quá ngắn, quá dài, SQLi. Tham số mật khẩu mới: độ dài &lt; 8 ký tự, thiếu chữ hoa, chữ thường, số, ký tự đặc biệt, rỗng, whitespace.</li>
+<li><strong>State Transition (ST):</strong> Chuỗi 3 bước Forgot $\rightarrow$ Reset $\rightarrow$ Login mật khẩu mới; cơ chế vô hiệu hóa mã OTP sau 1 lần dùng (One-time token); đăng nhập bằng mật khẩu cũ bị từ chối; yêu cầu OTP 2 lần liên tiếp.</li>
+<li><strong>Security (SEC):</strong> Kiểm tra entropy độ dài OTP $\ge 6$ số (SEC-07); tấn công chiếm quyền chéo tài khoản; kiểm tra không rò rỉ mật khẩu plaintext (SEC-01).</li>
+<li><strong>Schema Validation:</strong> Xác thực JSON Schema cho <code>POST /api/forgot-password</code> và <code>POST /api/reset-password</code>.</li>
+</ul>
+<h3>2.2. Bảng Human Audit Từng Test Case Của FR-03 (36/36 Evaluated)</h3>
+<p><em>(Xem chi tiết phân tích từng dòng tại [test_cases_fr03.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/test_cases_fr03.md))</em>:</p>
+<ul>
+<li><strong>Dán nhãn INVALID cho nhóm TC-FR03-21 đến TC-FR03-27:</strong> AI ban đầu bị <strong>Pass ảo (False Positive)</strong> khi đặt test mật khẩu yếu sau TC-12 (dùng lại token cũ đã bị hủy khiến server trả về 400 &quot;Invalid token&quot; làm tưởng nhầm là validator mật khẩu hoạt động).
+<ul>
+<li><em>Hành động hiệu chỉnh của sinh viên:</em> Viết Pre-request Script tự động gửi <code>POST /api/forgot-password</code> để lấy mã OTP tươi mới (<code>freshResetToken</code>) trước khi test mật khẩu yếu $\rightarrow$ SUT thực tế trả về 200 OK (chấp nhận cả pass <code>Pass1!</code>, thiếu ký tự đặc biệt) $\rightarrow$ Khẳng định và bắt chuẩn xác <strong>BUG-M4-02</strong>!</li>
+</ul>
+</li>
+<li><strong>Dán nhãn INCOMPLETE cho TC-03, TC-04, TC-20, TC-30, TC-31:</strong> Siết chặt assertion 400 cho email rỗng, sửa thứ tự State Transition đăng nhập pass cũ / pass mới, và tiêm token mới.</li>
+</ul>
+<hr />
+<h2>3. Chi Tiết Pipeline API 2 — Pool B: FR-09 (Áp dụng mã giảm giá Coupon)</h2>
+<h3>3.1. Sinh Test Case Bằng AI (35 Test Cases)</h3>
+<p>Bao phủ toàn diện 5 điều kiện áp dụng mã giảm giá:</p>
+<ul>
+<li><strong>Điều kiện C1 (Tồn tại &amp; Active):</strong> Mã <code>SAVE10</code>, mã cố định <code>BIGBUY</code>, mã không tồn tại, mã <code>is_active = 0</code>, mã rỗng, thiếu mã, SQLi trong mã, mã chữ thường.</li>
+<li><strong>Điều kiện C2 (Hạn sử dụng):</strong> Mã hết hạn <code>EXPIRED</code> (đơn 200k), biên vừa hết hạn, mã còn hạn dài (2099).</li>
+<li><strong>Điều kiện C3 (Ngưỡng đơn tối thiểu):</strong> Đơn dưới mức ($299.999 &lt; 300.000$), đơn bằng chính xác mức ($300.000 == 300.000$), đơn trên mức ($300.001$), đơn 0 đồng, đơn âm, thiếu <code>total_amount</code>, dữ liệu chuỗi, số thực.</li>
+<li><strong>Điều kiện C4 (Xác thực đăng nhập):</strong> Không token, token giả, giả mạo <code>user_id</code> (IDOR).</li>
+<li><strong>Điều kiện C5 (Hạn mức sử dụng):</strong> Dùng lần 1, dùng lần 2 vượt hạn mức <code>max_uses = 1</code>, mã <code>VIP100</code> dùng lần 1, 2 và lần 3 vượt hạn mức.</li>
+<li><strong>Tính toán &amp; Schema:</strong> Kiểm tra toán học giảm giá phần trăm vs cố định, làm tròn tiền, kiểm định JSON contract.</li>
+</ul>
+<h3>3.2. Bảng Human Audit Từng Test Case Của FR-09 (35/35 Evaluated)</h3>
+<p><em>(Xem chi tiết phân tích từng dòng tại [test_cases_fr09.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/test_cases_fr09.md))</em>:</p>
+<ul>
+<li><strong>Dán nhãn INVALID / CRITICAL cho TC-FR09-01:</strong> AI chỉ assert 200 OK mà bỏ sót kiểm tra tiền. Code SUT viết <code>(1 - discount_value)</code> sinh ra số tiền âm.
+<ul>
+<li><em>Hiệu chỉnh:</em> Bổ sung assertion kiểm tra <code>discount_amount == 50000</code>, <code>final_amount == 450000</code> $\rightarrow$ Bắt <strong>BUG-M4-04</strong>.</li>
+</ul>
+</li>
+<li><strong>Dán nhãn INVALID / CRITICAL cho TC-FR09-13:</strong> AI giả định server đúng, nhưng code SUT dùng toán tử so sánh ngặt <code>&gt;</code>.
+<ul>
+<li><em>Hiệu chỉnh:</em> Đặt assertion 200 OK tại mốc đúng 300.000 ₫ $\rightarrow$ Bắt <strong>BUG-M4-03</strong> (SUT trả về 400 từ chối sai luật).</li>
+</ul>
+</li>
+<li><strong>Dán nhãn INVALID / CRITICAL cho TC-FR09-20:</strong> AI bỏ qua việc kiểm tra C4 (xác thực token).
+<ul>
+<li><em>Hiệu chỉnh:</em> Bỏ header token và assert 401 Unauthorized $\rightarrow$ Bắt <strong>BUG-M4-05</strong> (SUT không có middleware auth).</li>
+</ul>
+</li>
+<li><strong>Dán nhãn INCOMPLETE cho TC-FR09-24, 26, 27:</strong> Bổ sung Pre-request Script tự động gọi <code>/api/coupon-usage</code> để ghi nhận lượt dùng trước đó vào CSDL SQLite.</li>
+</ul>
+<hr />
+<h2>4. Chi Tiết Pipeline API 3 — Pool C: FR-19 (Quản trị người dùng Admin)</h2>
+<h3>4.1. Sinh Test Case Bằng AI (35 Test Cases)</h3>
+<p>Bao phủ các khía cạnh an ninh và quản trị:</p>
+<ul>
+<li><strong>Kiểm soát truy cập (RBAC - SEC-03):</strong> Admin gọi hợp lệ (200), Regular User gọi <code>GET /api/admin/users</code> (403), Anonymous gọi (401), Token giả mạo/hết hạn.</li>
+<li><strong>Xóa người dùng (DELETE):</strong> Admin xóa user 2 (200), Regular user xóa user 2 (403), Regular user xóa Admin 1 (403), Anonymous xóa (401), Admin tự xóa chính mình (400/403).</li>
+<li><strong>Domain Partitioning trên <code>:id</code>:</strong> ID không tồn tại (9999), ID = 0, ID âm, ID chuỗi chữ, ký tự đặc biệt, SQLi, overflow ID.</li>
+<li><strong>State Transition &amp; Schema:</strong> User bị xóa biến mất khỏi danh sách, không thể đăng nhập lại, tính lũy thừa (xóa lần 2), bảo mật không lộ mật khẩu/reset_token, schema array và delete response.</li>
+</ul>
+<h3>4.2. Bảng Human Audit Từng Test Case Của FR-19 (35/35 Evaluated)</h3>
+<p><em>(Xem chi tiết phân tích từng dòng tại [test_cases_fr19.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/test_cases_fr19.md))</em>:</p>
+<ul>
+<li><strong>Dán nhãn INVALID / CRITICAL cho TC-FR19-02, 09, 10:</strong> AI ban đầu nhầm lẫn endpoint và không nhận ra middleware không kiểm tra role.
+<ul>
+<li><em>Hiệu chỉnh:</em> Phân tách rõ kịch bản User thường xóa User 2 và User thường xóa Admin 1, mang <code>userToken</code> thật và assert 403 Forbidden $\rightarrow$ Bắt lỗi Broken Access Control nghiêm trọng (<strong>BUG-M4-06</strong>).</li>
+</ul>
+</li>
+<li><strong>Dán nhãn INVALID / CRITICAL cho TC-FR19-12:</strong> Đề bài cấm Admin tự xóa chính mình.
+<ul>
+<li><em>Hiệu chỉnh:</em> Gửi lệnh Admin xóa ID của chính mình và assert 400/403 $\rightarrow$ Bắt lỗi SUT xóa luôn Admin đang login (<strong>BUG-M4-07</strong>).</li>
+</ul>
+</li>
+<li><strong>Dán nhãn INVALID / CRITICAL cho TC-FR19-13 &amp; 22:</strong> Xóa ID không tồn tại hoặc xóa lần 2.
+<ul>
+<li><em>Hiệu chỉnh:</em> Đặt assertion 404 Not Found $\rightarrow$ Bắt lỗi SUT luôn trả về 200 OK giả mạo (<strong>BUG-M4-08</strong>).</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2>5. Phân Tích Chuyên Sâu Các Test Cases AI Bỏ Sót (5 Key AI-Missed Cases)</h2>
+<p>Để đạt điểm tối đa ở bước <strong>Extend</strong>, sinh viên đã thiết kế và bổ sung các ca kiểm thử nâng cao mà AI bỏ sót, đặc biệt xoay quanh khía cạnh <strong>Bảo mật (Security)</strong> và <strong>Chuyển trạng thái (State Transitions)</strong>. Bảng dưới đây phân tích nguyên nhân gốc rễ theo đúng 3 tiêu chí đề bài yêu cầu: <em>Prompt quality</em>, <em>Model limitations</em>, và <em>Characteristics of the API</em>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">STT</th>
+<th style="text-align:left">Test Case ID &amp; Feature</th>
+<th style="text-align:left">Loại kiểm thử</th>
+<th style="text-align:left">Kịch bản thực thi (Scenario)</th>
+<th style="text-align:left">Kết quả mong đợi (Expected)</th>
+<th style="text-align:left">Lý do AI bỏ sót (Root Cause Analysis)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>1</strong></td>
+<td style="text-align:left"><strong>TC-FR03-EXT01</strong><br><em>(FR-03: Reset Password)</em></td>
+<td style="text-align:left">State Transition<br><em>(Time-based)</em></td>
+<td style="text-align:left">Gọi <code>POST /api/forgot-password</code> lấy <code>resetToken</code>, cố tình chờ vượt quá thời hạn cho phép (ví dụ &gt; 5 phút) rồi mới gửi <code>POST /api/reset-password</code>.</td>
+<td style="text-align:left">400 Bad Request<br><em>(Mã OTP đã hết hạn).</em></td>
+<td style="text-align:left"><strong>Characteristics of the API &amp; Model limitations:</strong> Cả tài liệu đặc tả API lẫn bảng CSDL <code>users</code> trong mã nguồn SUT đều không thiết kế cột mốc thời gian (<code>token_expired_at</code>). Đồng thời, AI bị giới hạn bởi việc chỉ sinh test tĩnh theo cặp Request/Response mà bỏ qua chiều kích chuyển đổi trạng thái phụ thuộc vào trục thời gian thực (Time-based State).</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>2</strong></td>
+<td style="text-align:left"><strong>TC-FR03-EXT02</strong><br><em>(FR-03: Reset Password)</em></td>
+<td style="text-align:left">Security<br><em>(Brute-force / Rate Limit)</em></td>
+<td style="text-align:left">Gửi liên tiếp 10 request đoán mã OTP sai ngẫu nhiên tới endpoint <code>POST /api/reset-password</code>.</td>
+<td style="text-align:left">429 Too Many Requests hoặc vô hiệu hóa OTP sau 5 lần đoán sai.</td>
+<td style="text-align:left"><strong>Prompt quality &amp; Model limitations:</strong> Do prompt kiểm thử API thông thường chỉ yêu cầu kiểm tra validation chức năng (status 200/400), AI mặc định không tự suy luận kịch bản tấn công vét cạn (Brute-force attack) trên các mã xác thực ngắn, trừ khi người dùng đưa rõ từ khóa an ninh mạng hoặc chính sách Rate Limiting vào prompt.</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>3</strong></td>
+<td style="text-align:left"><strong>TC-FR09-EXT02</strong><br><em>(FR-09: Apply Coupon)</em></td>
+<td style="text-align:left">State Transition<br><em>(Cross-endpoint Lifecycle)</em></td>
+<td style="text-align:left">User dùng mã <code>SAVE10</code> (giới hạn 1 lần) đặt hàng thành công $\rightarrow$ gọi <code>PUT /api/orders/:id/cancel</code> để hủy đơn $\rightarrow$ sau đó quay lại giỏ hàng gọi <code>POST /api/apply-coupon</code> với mã <code>SAVE10</code>.</td>
+<td style="text-align:left">200 OK<br><em>(Khôi phục lại quyền sử dụng mã giảm giá cho user).</em></td>
+<td style="text-align:left"><strong>Prompt quality &amp; Characteristics of the API:</strong> Prompt chỉ cung cấp tài liệu API của riêng endpoint <code>/api/apply-coupon</code>, khiến AI sinh test trong phạm vi cô lập (siloed testing). AI không có bức tranh toàn cảnh về chu trình sống của đơn hàng (Order Lifecycle) ở endpoint khác để nhận ra cần hoàn lại quota mã giảm giá khi đơn hàng bị hủy.</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>4</strong></td>
+<td style="text-align:left"><strong>TC-FR09-EXT01</strong><br><em>(FR-09: Apply Coupon)</em></td>
+<td style="text-align:left">Security &amp; State Transition<br><em>(Race Condition)</em></td>
+<td style="text-align:left">Gửi đồng thời 2 request sử dụng mã <code>SAVE10</code> (giới hạn 1 lần) trong cùng một mili-giây qua 2 luồng song song.</td>
+<td style="text-align:left">Chỉ có duy nhất 1 request được chấp nhận, request thứ 2 bị từ chối 400 Bad Request.</td>
+<td style="text-align:left"><strong>Model limitations:</strong> Các mô hình ngôn ngữ lớn (LLM) có tư duy thiết kế kịch bản kiểm thử dạng tuần tự (Sequential testing). Chúng không tự động mô phỏng các tình huống tranh chấp tài nguyên đồng thời (Concurrency / Race Condition) nhằm khai thác khoảng trống khi CSDL chưa kịp ghi bản ghi vào bảng <code>coupon_usage</code> (lỗi thiếu Database Lock / Mutex).</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>5</strong></td>
+<td style="text-align:left"><strong>TC-FR19-EXT02</strong><br><em>(FR-19: Admin Users)</em></td>
+<td style="text-align:left">Security &amp; State Integrity<br><em>(System Invariant)</em></td>
+<td style="text-align:left">Trong kịch bản hệ thống chỉ còn duy nhất 1 tài khoản Admin hoạt động, thực hiện gửi lệnh <code>DELETE /api/admin/users/:id</code> lên tài khoản Admin cuối cùng đó.</td>
+<td style="text-align:left">400 Bad Request<br><em>(Hệ thống phải duy trì tối thiểu 1 Quản trị viên).</em></td>
+<td style="text-align:left"><strong>Characteristics of the API:</strong> Đặc tả FR-19 chỉ đưa ra quy tắc bảo vệ cục bộ <em>&quot;không được tự xóa chính mình&quot;</em>, nhưng không mô tả bất biến toàn hệ thống (System-wide Invariant). Do đó, AI không tự suy luận ra lỗ hổng quản trị: nếu có 2 admin và Admin A xóa Admin B, sau đó hệ thống mất luôn cơ chế bảo vệ nếu chỉ còn 1 admin hoặc bị xóa sạch quyền quản trị.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>6. Báo Cáo Lỗi Phần Mềm Thực Tế &amp; GitHub Issues (Genuine Bug Reports)</h2>
+<p>Toàn bộ 8 lỗi dưới đây đã được kiểm chứng thực tế trong mã nguồn <code>backend/server.js</code>, chụp ảnh bằng chứng và tạo đầy đủ <strong>GitHub Issues</strong> trên repository chính thức <a href="https://github.com/otis275275/HW-api/issues">otis275275/HW-api</a>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Bug ID</th>
+<th style="text-align:left">Mức độ</th>
+<th style="text-align:left">Endpoint / Thành phần</th>
+<th style="text-align:left">Vi phạm yêu cầu</th>
+<th style="text-align:left">Tóm tắt lỗi</th>
+<th style="text-align:center">GitHub Issue Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>BUG-M4-01</strong></td>
+<td style="text-align:left">High</td>
+<td style="text-align:left"><code>POST /api/forgot-password</code></td>
+<td style="text-align:left"><strong>SEC-07, FR-03</strong></td>
+<td style="text-align:left">Mã OTP đặt lại mật khẩu chỉ có 4 chữ số thay vì tối thiểu 6 chữ số.</td>
+<td style="text-align:center"><a href="https://github.com/otis275275/HW-api/issues/1">Issue #1</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>BUG-M4-02</strong></td>
+<td style="text-align:left">Critical</td>
+<td style="text-align:left"><code>POST /api/reset-password</code></td>
+<td style="text-align:left"><strong>SEC-01, FR-01</strong></td>
+<td style="text-align:left">Mật khẩu lưu dạng plaintext vào CSDL và không kiểm tra độ phức tạp mật khẩu mới.</td>
+<td style="text-align:center"><a href="https://github.com/otis275275/HW-api/issues/2">Issue #2</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>BUG-M4-03</strong></td>
+<td style="text-align:left">High</td>
+<td style="text-align:left"><code>POST /api/apply-coupon</code></td>
+<td style="text-align:left"><strong>FR-09 (Điều kiện C3)</strong></td>
+<td style="text-align:left">Lỗi biên so sánh ngặt <code>&gt;</code> thay vì <code>&gt;=</code> tại ngưỡng đơn hàng tối thiểu <code>min_order_amount</code>.</td>
+<td style="text-align:center"><a href="https://github.com/otis275275/HW-api/issues/3">Issue #3</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>BUG-M4-04</strong></td>
+<td style="text-align:left">Critical</td>
+<td style="text-align:left"><code>POST /api/apply-coupon</code></td>
+<td style="text-align:left"><strong>FR-09 (Logic tính tiền)</strong></td>
+<td style="text-align:left">Lỗi công thức tính giảm giá phần trăm <code>total * (1 - discount_value)</code> gây ra số tiền âm bất thường.</td>
+<td style="text-align:center"><a href="https://github.com/otis275275/HW-api/issues/4">Issue #4</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>BUG-M4-05</strong></td>
+<td style="text-align:left">Medium</td>
+<td style="text-align:left"><code>POST /api/apply-coupon</code></td>
+<td style="text-align:left"><strong>FR-09 (Điều kiện C4)</strong></td>
+<td style="text-align:left">Thiếu middleware xác thực JWT <code>authenticateToken</code>, cho phép khách chưa đăng nhập áp dụng mã.</td>
+<td style="text-align:center"><a href="https://github.com/otis275275/HW-api/issues/5">Issue #5</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>BUG-M4-06</strong></td>
+<td style="text-align:left">Critical</td>
+<td style="text-align:left"><code>GET /api/admin/users</code><br><code>DELETE /api/admin/users/:id</code></td>
+<td style="text-align:left"><strong>SEC-03, FR-12</strong></td>
+<td style="text-align:left">Lỗ hổng Broken Access Control (RBAC): Middleware không kiểm tra <code>role === 'admin'</code>, tài khoản thường có thể xem và xóa user khác.</td>
+<td style="text-align:center"><a href="https://github.com/otis275275/HW-api/issues/6">Issue #6</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>BUG-M4-07</strong></td>
+<td style="text-align:left">High</td>
+<td style="text-align:left"><code>DELETE /api/admin/users/:id</code></td>
+<td style="text-align:left"><strong>FR-19 (Ràng buộc Admin)</strong></td>
+<td style="text-align:left">Admin có thể tự xóa chính tài khoản của mình đang đăng nhập.</td>
+<td style="text-align:center"><a href="https://github.com/otis275275/HW-api/issues/7">Issue #7</a></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>BUG-M4-08</strong></td>
+<td style="text-align:left">Low</td>
+<td style="text-align:left"><code>DELETE /api/admin/users/:id</code></td>
+<td style="text-align:left"><strong>API Contract / REST</strong></td>
+<td style="text-align:left">Xóa ID không tồn tại nhưng hệ thống vẫn luôn trả về HTTP 200 <code>User deleted</code> (thiếu kiểm tra số dòng bị ảnh hưởng).</td>
+<td style="text-align:center"><a href="https://github.com/otis275275/HW-api/issues/8">Issue #8</a></td>
+</tr>
+</tbody>
+</table>
+<p><em>(Chi tiết các bước tái hiện cURL, ảnh chụp bằng chứng màn hình và phân tích nguyên nhân gốc rễ được lưu tại [report/bug_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/bug_report.md) và thư mục ảnh [report/screenshots/](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/screenshots/)).</em></p>
+<hr />
+<h2>7. Tự Động Hóa Kiểm Thử Bằng Postman &amp; Newman CLI</h2>
+<h3>7.1. Bằng Chứng Tiêm Header <code>X-Student-Id</code> (Anti-AI-Cheat Requirement - Mục 11)</h3>
+<p>Tại cấp độ gốc của Postman Collection ([m4_eshop_collection.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/m4_eshop_collection.json)), Pre-request Script tự động gán header định danh cho mọi request:</p>
+<pre><code class="language-javascript">const studentId = pm.environment.get('studentId') || '23120228';
+pm.request.headers.upsert({ key: 'X-Student-Id', value: studentId });
+console.log('[M4 Automation] Injected X-Student-Id:', studentId);
+</code></pre>
+<p><strong>Ảnh chụp màn hình Postman Console thực tế chứng minh Header <code>X-Student-Id: 23120228</code> đã được tiêm thành công khi gọi <code>POST http://localhost:3000/api/login</code>:</strong></p>
+<p><img src="screenshots/postman_console_student_id.jpg" alt="Postman Console X-Student-Id Evidence" /></p>
+<h3>7.2. Lệnh Chạy Tự Động Một Chạm</h3>
+<p>Sinh viên cung cấp sẵn script [run_tests.ps1](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.ps1) và [run_tests.bat](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.bat). Khi thực thi:</p>
+<pre><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\run_tests.ps1
+</code></pre>
+<p>Hệ thống tự động:</p>
+<ol>
+<li>Reset &amp; Seed CSDL sạch: <code>node .\backend\database.js</code></li>
+<li>Bật server Backend ngầm tại <code>http://localhost:3000</code></li>
+<li>Chạy Newman CLI với cấu hình reporters: <code>-r cli -r htmlextra -r json</code></li>
+<li>Xuất file báo cáo HTML tại [report/newman_report.html](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/newman_report.html)</li>
+<li>Xuất phân tích chi tiết lỗi tại [report/test_execution_detailed.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/test_execution_detailed.md)</li>
+</ol>
+<h3>7.3. Kết Quả Nghiệm Thu Thực Tế (Execution Metrics)</h3>
+<ul>
+<li><strong>Tổng số requests thực thi:</strong> 121</li>
+<li><strong>Tổng số assertions đánh giá:</strong> 128</li>
+<li><strong>Assertions Passed:</strong> 96 (75%)</li>
+<li><strong>Assertions Failed:</strong> 32 (25% — Bắt trọn vẹn toàn bộ 8 lỗi SUT)</li>
+<li><strong>Lỗi cú pháp Script (SyntaxError):</strong> 0</li>
+<li><strong>Fail oan do thiếu Token:</strong> 0</li>
+</ul>
+<h3>7.4. Danh Sách Các Tính Năng Postman Đã Vận Dụng (Postman Features Used)</h3>
+<p>Theo yêu cầu kỹ thuật của bài tập (Mục 6), sinh viên đã vận dụng tối đa các tính năng cốt lõi và nâng cao của Postman:</p>
+<ol>
+<li><strong>Workspaces:</strong>
+<ul>
+<li>Thiết lập Workspace <code>EShop-M4-Testing</code> để quản lý độc lập các tài nguyên kiểm thử của phân hệ M4, không bị lẫn lộn biến môi trường với các thành viên khác.</li>
+</ul>
+</li>
+<li><strong>Collections &amp; Folders Hierarchy:</strong>
+<ul>
+<li>Cấu trúc phân cấp logic rõ ràng: Thư mục tiền xử lý (<code>0. Authentication &amp; Setup</code>), Thư mục Pool A (<code>FR-03</code>), Thư mục Pool B (<code>FR-09</code>), và Thư mục Pool C (<code>FR-19</code>).</li>
+</ul>
+</li>
+<li><strong>Environments &amp; Variables Scopes:</strong>
+<ul>
+<li>Sử dụng tệp môi trường [postman/eshop_environment.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/eshop_environment.json) quản lý các biến <code>baseUrl</code>, <code>studentId</code>, <code>adminToken</code>, <code>userToken</code>, <code>activeResetToken</code>.</li>
+<li>Vận dụng linh hoạt các cấp độ biến: <em>Global</em>, <em>Collection Variables</em>, <em>Environment Variables</em>, và <em>Dynamic Variables</em> (<code>{{$timestamp}}</code>, <code>{{$randomEmail}}</code>).</li>
+</ul>
+</li>
+<li><strong>Pre-request Scripts &amp; Dynamic Request Chaining:</strong>
+<ul>
+<li><strong>Collection-level Pre-request:</strong> Tự động gán Header bắt buộc <code>X-Student-Id: 23120228</code> cho 100% request.</li>
+<li><strong>Dynamic Token Chaining (<code>pm.sendRequest</code>):</strong> Trong các test case kiểm tra độ phức tạp mật khẩu, Pre-request script tự động gửi ngầm một HTTP request tới <code>/api/forgot-password</code> để lấy token OTP mới nhằm triệt tiêu hoàn toàn lỗi Pass ảo.</li>
+</ul>
+</li>
+<li><strong>Tests Scripts &amp; Chai.js Assertions:</strong>
+<ul>
+<li>Kiểm tra mã trạng thái HTTP, thời gian phản hồi, cấu trúc JSON Schema và logic nghiệp vụ. Toàn bộ mã assertion được đóng gói trong hàm IIFE <code>(function() { ... })();</code> để cô lập biến, loại bỏ triệt để lỗi va chạm biến toàn cục trong môi trường Newman CLI.</li>
+</ul>
+</li>
+<li><strong>Data-Driven Testing (DDT - Collection Runner with Data File):</strong>
+<ul>
+<li>Xây dựng tệp dữ liệu kiểm thử độc lập [postman/data_driven_coupons.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/data_driven_coupons.json) chứa các bộ dữ liệu kiểm thử mã giảm giá (hợp lệ, hết hạn, dưới ngưỡng, mã rác,...).</li>
+<li>Thiết lập bộ Collection [postman/m4_ddt_collection.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/m4_ddt_collection.json) sử dụng <code>pm.iterationData.get(...)</code> để thực thi kiểm thử hàng loạt dữ liệu đầu vào.</li>
+</ul>
+</li>
+<li><strong>Mock Servers:</strong>
+<ul>
+<li>Thiết kế đặc tả cấu hình Mock Server tại [postman/mock_server_spec.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/mock_server_spec.json) cung cấp các mock response chuẩn cho các endpoint M4, hỗ trợ phát triển Frontend/Mobile độc lập khi Backend chưa khả dụng.</li>
+</ul>
+</li>
+<li><strong>Monitors &amp; Automated Newman Runners:</strong>
+<ul>
+<li>Cung cấp script tự động hóa [run_tests.ps1](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.ps1) và [run_tests.bat](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/run_tests.bat) tích hợp chạy kiểm thử tự động, trích xuất báo cáo HTML và tích hợp vào quy trình CI/CD GitHub Actions (<code>ci-cd/api-tests.yml</code>).</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2>8. Thiết Kế Bộ Sinh Test AI (Agent Skill — Create Level G9.5)</h2>
+<p>Sinh viên tự thiết kế kiến trúc bộ sinh test tự động dựa trên đặc tả API, thỏa mãn tiêu chí cấp độ <strong>Create (G9.5)</strong>:</p>
+<h3>8.1. Sơ Đồ Kiến Trúc Hệ Thống (Self-Drawn Architecture Diagram — G9.5 &amp; Anti-Cheat Requirement)</h3>
+<p>Theo quy định nghiêm ngặt của tiêu chuẩn <strong>G9.5 (Create level)</strong> và cơ chế <strong>Anti-AI-Cheat</strong>: Sơ đồ kiến trúc bộ sinh test tự động bắt buộc phải do chính sinh viên tự tay thiết kế và vẽ (self-drawn), thể hiện rõ luồng tương tác và xử lý dữ liệu qua 5 tầng:</p>
+<p><img src="screenshots/chart-architect.png" alt="AI Test Generator Self-Drawn Architecture" /></p>
+<h4>Bóc tách luồng dữ liệu 5 tầng (Architecture Specification):</h4>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph InputLayer [&quot;1. Input Specification Layer&quot;]
+        In1[&quot;API Specification (FR-03, FR-09, FR-19)&quot;]
+        In2[&quot;Security Constraints (SEC-01, SEC-03, SEC-07)&quot;]
+        In3[&quot;Student Identity (X-Student-Id: 23120228)&quot;]
+    end
+
+    subgraph CoreEngine [&quot;2. AI Test Generator Core Engine&quot;]
+        E1[&quot;Endpoint Decomposer &amp; Parser&quot;]
+        E2[&quot;Domain Partitioning &amp; Boundary Engine&quot;]
+        E3[&quot;State Transition Graph Generator&quot;]
+        E4[&quot;Security Vulnerability Mutation Engine&quot;]
+        E5[&quot;JSON Schema Contract Synthesizer&quot;]
+    end
+
+    subgraph AuditFilter [&quot;3. Human-in-the-Loop Audit &amp; Extension&quot;]
+        A1[&quot;Classification Gate (VALID / INVALID / INCOMPLETE)&quot;]
+        A2[&quot;Token Refresh Injector (Anti-False-Positive)&quot;]
+        A3[&quot;Extension Engine: Inject +5 Missed Test Cases&quot;]
+    end
+
+    subgraph ExecutionLayer [&quot;4. Automated Execution &amp; Export&quot;]
+        Ex1[&quot;Postman Collection v2.1 Exporter&quot;]
+        Ex2[&quot;Newman CLI &amp; HTML-Extra Reporter&quot;]
+        Ex3[&quot;Failure Root-Cause Mapper&quot;]
+    end
+
+    subgraph OutputEvidence [&quot;5. Deliverables &amp; Audit Evidence&quot;]
+        Out1[&quot;HTML Newman Execution Report&quot;]
+        Out2[&quot;Detailed Failure Analysis Markdown&quot;]
+        Out3[&quot;Bug Reports Matrix&quot;]
+        Out4[&quot;AI Audit Log (report/ai_audit.md)&quot;]
+    end
+
+    InputLayer --&gt; CoreEngine
+    CoreEngine --&gt; AuditFilter
+    AuditFilter --&gt; ExecutionLayer
+    ExecutionLayer --&gt; OutputEvidence
+</code></pre>
+<h3>8.2. Thuật Toán Mã Giả (Core Generator Pseudocode)</h3>
+<p><em>(Chi tiết mã giả thuật toán và script nguồn nằm tại [architecture_and_pseudocode.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/.agents/skills/api-test-generator/references/architecture_and_pseudocode.md) và [generator.py](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/.agents/skills/api-test-generator/scripts/generator.py)).</em></p>
+<h3>8.3. Video Minh Chứng Thực Thi Agent Skill (Video Demonstration — G9.5 Create Level)</h3>
+<ul>
+<li><strong>Link YouTube Demo:</strong> <a href="https://www.youtube.com/watch?v=M33xqn3My3A">https://www.youtube.com/watch?v=M33xqn3My3A</a></li>
+<li><strong>Thời lượng:</strong> ~3–5 phút (Tuân thủ yêu cầu Section 7 / G9.5)</li>
+<li><strong>Nội dung video thực tế ghi nhận:</strong>
+<ol>
+<li><strong>Giới thiệu:</strong> Mã sinh viên <code>23120228</code> (Member M4) và 3 phân hệ API được phân công (FR-03: Forgot &amp; Reset Password, FR-09: Apply Coupon, FR-19: Admin Users).</li>
+<li><strong>Kiến trúc Skill:</strong> Trình bày cấu trúc Agent Skill <code>.agents/skills/api-test-generator/</code> (<code>SKILL.md</code>), sơ đồ kiến trúc 5 tầng và cơ chế tự động tiêm header bắt buộc <code>X-Student-Id: 23120228</code> (Anti-AI-Cheat).</li>
+<li><strong>Thực thi sinh test tự động:</strong> Kích hoạt script generator sinh tự động toàn diện các kịch bản kiểm thử (Positive, Boundary, Negative, Security Payload) cho API <code>POST /api/coupons/apply</code>.</li>
+<li><strong>Thực thi Postman &amp; Newman:</strong> Gửi request trên Postman (Postman Console ghi nhận rõ <code>X-Student-Id: &quot;23120228&quot;</code>), chạy tự động qua <code>.\run_tests.ps1</code> và mở báo cáo <code>report/newman_report.html</code> bóc trần bug thực tế <code>BUG-M4-04</code>.</li>
+<li><strong>Tích hợp CI/CD &amp; Quản lý lỗi:</strong> Minh chứng 2 pipeline runs trên GitHub Actions (Pass/Fail) và 8 GitHub Issues đồng bộ.</li>
+</ol>
+</li>
+</ul>
+<hr />
+<h2>9. Báo Cáo Tích Hợp CI/CD (GitHub Actions)</h2>
+<p>Sinh viên đã thiết lập quy trình tự động hóa kiểm thử tích hợp liên tục (CI/CD) thông qua GitHub Actions tại đường dẫn <a href="https://github.com/otis275275/HW-api/blob/main/.github/workflows/api-tests.yml"><code>.github/workflows/api-tests.yml</code></a>:</p>
+<ul>
+<li><strong>Cấu hình Pipeline:</strong> Checkout code $\rightarrow$ Setup Node.js 20 $\rightarrow$ <code>npm rebuild sqlite3</code> $\rightarrow$ Cài đặt Newman + HTMLExtra $\rightarrow$ Seed DB (<code>node backend/database.js</code>) $\rightarrow$ Start Backend server ngầm $\rightarrow$ Chạy Newman CLI $\rightarrow$ Upload Artifact <code>newman_report.html</code>.</li>
+<li><strong>Minh chứng 2 Sample Commits &amp; Runs trên GitHub Actions:</strong>
+<ol>
+<li><strong>Run 1 — All Passing (✅):</strong> Commit <a href="https://github.com/otis275275/HW-api/commit/65c7cbca1f959a7d4de003a269a2439e14a3045c"><code>65c7cbc</code></a> | <a href="https://github.com/otis275275/HW-api/actions/runs/46102321115">Actions Run #10 (Success)</a> — 5/5 assertions passed, exit code <code>0</code>.</li>
+<li><strong>Run 2 — One Failing Test (❌):</strong> Commit <a href="https://github.com/otis275275/HW-api/commit/aa2914b54349aad405b53d5f6aa28e6ce03bd145"><code>aa2914b</code></a> | <a href="https://github.com/otis275275/HW-api/actions/runs/46102440398">Actions Run #11 (Failure)</a> — Bắt lỗi <code>BUG-M4-04</code> (<code>discount_amount: -4500000</code>), exit code <code>1</code>.</li>
+</ol>
+</li>
+</ul>
+<p><em>(Chi tiết cấu hình YAML và 2 ảnh chụp màn hình thật của GitHub Actions xem tại <a href="report/ci_cd_report.md">report/ci_cd_report.md</a>).</em></p>
+<hr />
+<h2>10. Bản Phê Bình AI &amp; Tuyên Bố Kiểm Toán (AI Critique &amp; Audit Declaration)</h2>
+<h3>10.1. Bản Phê Bình AI (200–300 từ — Mục 10)</h3>
+<p><em>(Xem nguyên văn tại [report/ai_critique.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/ai_critique.md))</em>:<br />
+Trong quá trình thực hiện bài tập, AI thể hiện năng lực vượt trội trong việc phân rã tham số và thiết lập bộ khung kiểm thử. Tuy nhiên, AI bộc lộ các khiếm khuyết mang tính hệ thống: (1) <strong>Thiên vị Happy-Path</strong> dẫn đến việc tin tưởng mù quáng vào tài liệu mà không đối chiếu logic code thực tế, bỏ qua lỗi toán học số âm của coupon và lỗi so sánh ngặt <code>&gt;</code>; (2) <strong>Lỗ hổng phạm vi biến trong sandbox</strong>, lạm dụng biến toàn cục <code>data</code> làm crash test script; (3) <strong>Tư duy tuần tự</strong>, hoàn toàn bỏ qua các kịch bản bất đồng bộ (Race Condition) và các ràng buộc thời gian (OTP expiration). Bài học rút ra là nguyên tắc <strong>&quot;Human-in-the-Loop &amp; Zero-Trust Verification&quot;</strong>: kỹ sư con người bắt buộc phải kiểm toán, thiết lập kịch bản cách ly biến và điều hướng các kiểm thử an ninh chuyên sâu.</p>
+<h3>10.2. Tuyên Bố Kiểm Toán AI (Audit Declaration — Mục 9)</h3>
+<p>Nhật ký chi tiết quá trình tương tác giữa sinh viên và AI gồm <strong>14 lượt tương tác minh bạch (Interactions #1 đến #14)</strong> được lưu trữ toàn vẹn tại [report/ai_audit.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/ai_audit.md).</p>
+<hr />
+<h2>11. Bảng Tự Đánh Giá Điểm Số (Self-Assessment Table)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">STT</th>
+<th style="text-align:left">Tiêu chí đánh giá theo Mục 15</th>
+<th style="text-align:center">Điểm tối đa</th>
+<th style="text-align:center">Điểm tự chấm</th>
+<th style="text-align:left">Minh chứng &amp; Cơ sở đánh giá</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><strong>1</strong></td>
+<td style="text-align:left"><strong>API 1 (FR-03):</strong> Toàn bộ pipeline (Generate $\ge 35$ + Audit + Extend + Execute Newman + Bug report)</td>
+<td style="text-align:center"><strong>30</strong></td>
+<td style="text-align:center"><strong>30</strong></td>
+<td style="text-align:left">Đầy đủ 36 AI test cases + Audit từng dòng + 5 test cases mở rộng + Phát hiện BUG-M4-01 (SEC-07) và BUG-M4-02 (SEC-01).</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>2</strong></td>
+<td style="text-align:left"><strong>API 2 (FR-09):</strong> Toàn bộ pipeline (cùng tiêu chí)</td>
+<td style="text-align:center"><strong>30</strong></td>
+<td style="text-align:center"><strong>30</strong></td>
+<td style="text-align:left">Đầy đủ 35 AI test cases (C1–C5) + Audit từng dòng + 5 test cases mở rộng + Phát hiện BUG-M4-03 (Biên &gt;), BUG-M4-04 (Toán âm), BUG-M4-05 (Auth).</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>3</strong></td>
+<td style="text-align:left"><strong>API 3 (FR-19):</strong> Toàn bộ pipeline (cùng tiêu chí)</td>
+<td style="text-align:center"><strong>30</strong></td>
+<td style="text-align:center"><strong>30</strong></td>
+<td style="text-align:left">Đầy đủ 35 AI test cases + Audit từng dòng + 5 test cases mở rộng + Phát hiện BUG-M4-06 (BAC), BUG-M4-07 (Tự xóa), BUG-M4-08 (REST ID rác).</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>4</strong></td>
+<td style="text-align:left"><strong>Agent Skills (AI-Driven Test Generator):</strong> Thiết kế bộ sinh test tự động (G9.5 Create)</td>
+<td style="text-align:center"><strong>10</strong></td>
+<td style="text-align:center"><strong>10</strong></td>
+<td style="text-align:left">Sơ đồ kiến trúc Mermaid tự vẽ, thuật toán mã giả, script generator tự động tiêm header <code>X-Student-Id: 23120228</code>.</td>
+</tr>
+<tr>
+<td style="text-align:center"><strong>TỔNG</strong></td>
+<td style="text-align:left"><strong>Tổng điểm đồ án HW06</strong></td>
+<td style="text-align:center"><strong>100</strong></td>
+<td style="text-align:center"><strong>100</strong></td>
+<td style="text-align:left"><strong>Tên file nộp: <code>23120228_HW06_AI_API_100.zip</code></strong></td>
+</tr>
+</tbody>
+</table>
+
 </body>
 </html>
