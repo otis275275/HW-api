@@ -44,8 +44,7 @@ jobs:
           newman run postman/m4_eshop_collection.json \
             --environment postman/eshop_environment.json \
             --reporters cli,htmlextra \
-            --reporter-htmlextra-export report/newman_report.html \
-            --suppress-exit-code
+            --reporter-htmlextra-export report/newman_report.html
 
       - name: Upload Test Report Artifact
         uses: actions/upload-artifact@v4
