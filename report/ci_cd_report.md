@@ -72,28 +72,34 @@ jobs:
 
 ## 2. Báo Cáo Hai Lần Chạy Mẫu (Two Sample Pipeline Runs)
 
-Theo yêu cầu tại Mục 6 và Mục 14 của đề bài, hệ thống cung cấp 2 kịch bản commit tương ứng với 2 trạng thái kiểm thử:
+Theo yêu cầu tại Mục 6 và Mục 14 của đề bài, sinh viên đã thực hiện 2 commit mẫu trực tiếp trên nhánh `main` của repository `otis275275/HW-api` để kiểm chứng pipeline ở cả 2 trạng thái **Pass (Xanh ✅)** và **Fail (Đỏ ❌)**:
 
 ### Lần Chạy 1: Toàn bộ Test Cases Đều Vượt Qua (All API Test Cases Passing)
-* **Kịch bản:** Sử dụng bộ kiểm thử hợp chuẩn [postman/m4_passing_collection.json](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/postman/m4_passing_collection.json) bao gồm các API cốt lõi hoạt động đúng đặc tả (Admin Login, User Login, Forgot password hợp lệ, Áp dụng coupon cố định BIGBUY, Admin lấy danh sách user).
-* **Kết quả thực thi trên Newman:**
-  - **Executed Requests:** 5 / 5
-  - **Assertions Passed:** 5 / 5 (100%)
-  - **Assertions Failed:** 0
-  - **Exit Code:** `0` (Success — Trạng thái GitHub Actions: **Green Checkmark ✅**)
-* **Ý nghĩa:** Chứng minh quy trình CI/CD hoạt động ổn định, server khởi động thành công, cơ sở dữ liệu được nạp hạt giống (seed) chuẩn xác và hệ thống API sẵn sàng triển khai.
+* **Sample Commit:** [`65c7cbc`](https://github.com/otis275275/HW-api/commit/65c7cbca1f959a7d4de003a269a2439e14a3045c) — `ci(test): sample commit 1 - all API test cases passing (23120228)`
+* **GitHub Actions Run Link:** [Run #10 (ID: 46102321115) — Success ✅](https://github.com/otis275275/HW-api/actions/runs/46102321115)
+* **Kịch bản:** Chạy bộ kiểm thử hợp chuẩn (`m4_passing_collection.json`) gồm 5 requests cốt lõi hoạt động đúng đặc tả (Admin Login, User Login, Forgot password hợp lệ, Áp dụng coupon cố định `BIGBUY`, Admin lấy danh sách user).
+* **Kết quả thực thi trên GitHub Actions:**
+  - **Executed Requests:** 5 / 5 | **Assertions Passed:** 5 / 5 (100%) | **Assertions Failed:** 0
+  - **Duration:** `1m 29s` | **Exit Code:** `0` (`Success` — **Green Checkmark ✅**) | **Artifact:** Đã xuất `newman-api-test-report`
+* **Ảnh chụp màn hình GitHub Actions (All Passing):**
+  ![CI/CD Pass Run](screenshots/cicd_run_pass.png)
 
 ---
 
-### Lần Chạy 2: Phát Hiện Lỗi Phần Mềm — Pipeline Báo Đỏ (One Failing Test Case)
-* **Kịch bản:** Kích hoạt bộ kiểm thử phát hiện lỗi hồi quy (Regression Defect), cụ thể là kiểm tra mã giảm giá phần trăm `SAVE10` trên đơn hàng 500.000 ₫.
+### Lần Chạy 2: Phát Hiện 1 Test Case Thất Bại — Pipeline Báo Đỏ (One Failing Test Case)
+* **Sample Commit:** [`aa2914b`](https://github.com/otis275275/HW-api/commit/aa2914b54349aad405b53d5f6aa28e6ce03bd145) — `ci(test): sample commit 2 - one API test case failing on BUG-M4-04 (23120228)`
+* **GitHub Actions Run Link:** [Run #11 (ID: 46102440398) — Failure ❌](https://github.com/otis275275/HW-api/actions/runs/46102440398)
+* **Kịch bản:** Bổ sung thêm 1 test case kiểm tra công thức tính phần trăm của mã giảm giá `SAVE10` (`2.2 FR-09 Apply Coupon - Percent SAVE10`) yêu cầu `discount_amount === 50000`.
 * **Chi tiết lỗi bắt được:**
   - Assertion vi phạm: `pm.expect(json.discount_amount).to.eql(50000)`
-  - Giá trị thực tế server trả về: `discount_amount: -4500000` (Âm 4,5 triệu do lỗi công thức `1 - discount_value` — **BUG-M4-04**).
-* **Kết quả thực thi trên Newman:**
-  - **Assertions Failed:** 1
-  - **Exit Code:** `1` (Non-zero exit code — Trạng thái GitHub Actions: **Red Cross ❌**)
-* **Ý nghĩa:** Chứng minh bộ kiểm thử tự động trong CI/CD có khả năng chặn đứng lỗi nghiêm trọng (Quality Gate), ngăn không cho mã nguồn lỗi được merge hoặc deploy lên môi trường Production.
+  - Giá trị thực tế SUT trả về: `discount_amount: -4500000` (Âm 4,5 triệu do lỗi công thức `1 - discount_value` — **BUG-M4-04**).
+* **Kết quả thực thi trên GitHub Actions:**
+  - **Executed Requests:** 6 / 6 | **Assertions Passed:** 5 | **Assertions Failed:** 1
+  - **Duration:** `1m 16s` | **Exit Code:** `1` (`Failure` — **Red Cross ❌**)
+* **Ảnh chụp màn hình GitHub Actions (One Test Failing):**
+  ![CI/CD Fail Run](screenshots/cicd_run_fail.png)
+
+*(Sau 2 lần chạy mẫu trên, commit [`b3169bd`](https://github.com/otis275275/HW-api/commit/b3169bd) đã khôi phục lại bộ collection đầy đủ 111 requests cho phân hệ M4).*
 
 ---
 

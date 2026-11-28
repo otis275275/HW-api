@@ -1,3 +1,23 @@
+555b3c1 - Otis, 2026-11-28 10:24:29 +0700 : docs: add real CI/CD pass/fail commit links, screenshots, and updated PDFs
+b3169bd - Otis, 2026-11-28 10:22:08 +0700 : chore: restore full 111-request test collection after CI/CD sample runs
+aa2914b - Otis, 2026-11-28 10:21:07 +0700 : ci(test): sample commit 2 - one API test case failing on BUG-M4-04 (23120228)
+65c7cbc - Otis, 2026-11-28 10:19:45 +0700 : ci(test): sample commit 1 - all API test cases passing (23120228)
+c6eebaa - otis275275, 2026-11-28 10:12:49 +0700 : Update api-tests.yml
+a408ce9 - Otis, 2026-11-28 10:07:11 +0700 : docs: log Interaction #25 in ai_audit.md
+86ae36b - Otis, 2026-11-28 09:57:05 +0700 : fix: replace mock bug cards with authentic Newman HTML report screenshots
+e42de9f - Otis, 2026-11-23 20:59:02 +0700 : Merge branch 'main' of https://github.com/otis275275/HW-api
+96a4cb2 - Otis, 2026-11-23 20:58:26 +0700 : chore: finalize submission package and self-assessment table in README
+4435007 - otis275275, 2026-11-23 20:47:44 +0700 : Update backend dependency installation command
+3922953 - Otis, 2026-11-23 20:45:52 +0700 : Merge branch 'main' of https://github.com/otis275275/HW-api
+baebdc2 - Otis, 2026-11-23 20:44:28 +0700 : fix: rebuild native sqlite3 for linux runner in CI/CD
+bf695ef - otis275275, 2026-11-23 20:38:31 +0700 : Refactor API test workflow for backend dependency installation
+6b764d4 - Otis, 2026-11-23 20:33:47 +0700 : Merge branch 'main' of https://github.com/otis275275/HW-api
+64d02be - Otis, 2026-11-23 20:30:21 +0700 : fix: resolve GitHub Actions setup-node cache lockfile error and update reports
+03f29ac - otis275275, 2026-11-23 20:25:35 +0700 : Add CI/CD workflow for EShop API testing
+b16d4ff - Otis, 2026-11-23 20:18:20 +0700 : docs: add CI/CD report, sample all-passing collection, and update audit log
+da0756a - Otis, 2026-11-23 20:09:54 +0700 : docs: update ai_audit.md with Interaction #19
+1986ccc - Otis, 2026-11-23 19:25:04 +0700 : feat: implement Data-Driven Testing (DDT), Mock Server specs, and document Postman features in main report
+94ca03a - Otis, 2026-11-23 18:24:18 +0700 : docs: update ai_audit.md Interaction #17 and git commit log
 1e65d99 - Otis, 2026-11-23 18:21:14 +0700 : feat: complete HW06 API testing test suites, Newman reports, agent skills, and bug reports for Member M4 (23120228)
 01bd7fc - Otis, 2026-11-22 15:41:30 +0700 : first commit
 85af3ba - ttbhanh-hcmus, 2026-05-15 08:30:35 +0700 : first upload

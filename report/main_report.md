@@ -238,15 +238,13 @@ flowchart TD
 
 ## 9. Báo Cáo Tích Hợp CI/CD (GitHub Actions)
 
-Sinh viên đã thiết lập quy trình tự động hóa kiểm thử tích hợp liên tục (CI/CD) thông qua GitHub Actions tại đường dẫn `.github/workflows/api-tests.yml`:
-* **Cấu hình Pipeline:**
-  1. Checkout source code.
-  2. Cài đặt Node.js môi trường Ubuntu-latest.
-  3. Khởi tạo CSDL SQLite: `node backend/database.js`.
-  4. Khởi chạy server Backend ngầm trên cổng 3000.
-  5. Cài đặt Newman và Newman Reporter HTMLExtra.
-  6. Thực thi Newman CLI kiểm thử toàn bộ collection `postman/m4_eshop_collection.json`.
-  7. Upload Artifacts báo cáo HTML lên GitHub Actions.
+Sinh viên đã thiết lập quy trình tự động hóa kiểm thử tích hợp liên tục (CI/CD) thông qua GitHub Actions tại đường dẫn [`.github/workflows/api-tests.yml`](https://github.com/otis275275/HW-api/blob/main/.github/workflows/api-tests.yml):
+* **Cấu hình Pipeline:** Checkout code $\rightarrow$ Setup Node.js 20 $\rightarrow$ `npm rebuild sqlite3` $\rightarrow$ Cài đặt Newman + HTMLExtra $\rightarrow$ Seed DB (`node backend/database.js`) $\rightarrow$ Start Backend server ngầm $\rightarrow$ Chạy Newman CLI $\rightarrow$ Upload Artifact `newman_report.html`.
+* **Minh chứng 2 Sample Commits & Runs trên GitHub Actions:**
+  1. **Run 1 — All Passing (✅):** Commit [`65c7cbc`](https://github.com/otis275275/HW-api/commit/65c7cbca1f959a7d4de003a269a2439e14a3045c) | [Actions Run #10 (Success)](https://github.com/otis275275/HW-api/actions/runs/46102321115) — 5/5 assertions passed, exit code `0`.
+  2. **Run 2 — One Failing Test (❌):** Commit [`aa2914b`](https://github.com/otis275275/HW-api/commit/aa2914b54349aad405b53d5f6aa28e6ce03bd145) | [Actions Run #11 (Failure)](https://github.com/otis275275/HW-api/actions/runs/46102440398) — Bắt lỗi `BUG-M4-04` (`discount_amount: -4500000`), exit code `1`.
+
+*(Chi tiết cấu hình YAML và 2 ảnh chụp màn hình thật của GitHub Actions xem tại [report/ci_cd_report.md](report/ci_cd_report.md)).*
 
 ---
 

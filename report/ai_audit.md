@@ -584,3 +584,18 @@ I use AI tools for the following tasks:
   - **Cập nhật toàn bộ 8 GitHub Issues (#1–#8) trên `otis275275/HW-api` hiển thị ảnh chụp Newman thật:**
     - Sử dụng GitHub REST API (`PATCH /repos/otis275275/HW-api/issues/{number}`) để cập nhật trực tiếp toàn bộ 8 Issues (`#1` đến `#8`), trỏ URL ảnh chụp về đúng mã commit `86ae36b` (commit chứa 8 ảnh chụp thật từ `report/newman_report.html`), loại bỏ hoàn toàn cache ảnh cũ của GitHub Camo Proxy.
     - Xác nhận cập nhật thành công cả 8 đường dẫn: `https://github.com/otis275275/HW-api/issues/1` đến `/issues/8`.
+
+### Interaction #26
+- **AI Tool:** Antigravity (Gemini 4 Hydrogen)
+- **Date & Time:** 2026-11-28T10:10:39+07:00
+- **User Prompt:**
+  ```text
+  tạo cho tui 2 commit 1 fail 1 pass, sau đó tự lên github action chụp luôn cho tui
+  ```
+- **AI Output:**
+  - **Thực hiện 2 Sample Commits & Chụp ảnh GitHub Actions thật cho Báo cáo CI/CD:**
+    1. **Sample Commit 1 (All-Passing ✅):** Commit [`65c7cbc`](https://github.com/otis275275/HW-api/commit/65c7cbca1f959a7d4de003a269a2439e14a3045c) chạy bộ 5 test cases hợp chuẩn (`m4_passing_collection.json`) $\rightarrow$ GitHub Actions [Run #10](https://github.com/otis275275/HW-api/actions/runs/46102321115) hoàn thành `Success` (5/5 passed, exit code `0`).
+    2. **Sample Commit 2 (One Failing Test ❌):** Commit [`aa2914b`](https://github.com/otis275275/HW-api/commit/aa2914b54349aad405b53d5f6aa28e6ce03bd145) bổ sung 1 test case bắt lỗi công thức giảm giá phần trăm `SAVE10` (`BUG-M4-04`) $\rightarrow$ GitHub Actions [Run #11](https://github.com/otis275275/HW-api/actions/runs/46102440398) hoàn thành `Failure` (exit code `1`).
+    3. **Khôi phục Collection chuẩn:** Commit [`b3169bd`](https://github.com/otis275275/HW-api/commit/b3169bd) khôi phục lại đầy đủ 111 requests cho `postman/m4_eshop_collection.json`.
+    4. **Chụp 2 ảnh thật từ GitHub Actions bằng Playwright:** Lưu tại [report/screenshots/cicd_run_pass.png](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/screenshots/cicd_run_pass.png) và [report/screenshots/cicd_run_fail.png](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/screenshots/cicd_run_fail.png).
+    5. **Đồng bộ toàn bộ báo cáo & đóng gói:** Cập nhật [report/ci_cd_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/ci_cd_report.md), [report/main_report.md](file:///d:/ALL_SOURCE_CODE/Learning/Testing/HW-api/eshop-sut/report/main_report.md), xuất lại `git_commit_log.txt`, xuất lại các file `.pdf` và đóng gói lại `23120228_HW06_AI_API_100.zip`.
